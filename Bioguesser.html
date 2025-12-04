@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bioguesser – Habitat & Verbreitungsgebiete</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet.draw -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+
+  <style>
+    body{margin:0;font-family:Inter,Arial;background:#0c111b;color:#e8eef5}
+    .app{display:grid;grid-template-columns:340px 1fr;height:100vh}
+    .sidebar{padding:18px;background:#111827;overflow-y:auto}
+    .mapwrap{position:relative}
+    #map{height:100%;width:100%}
+
+    .btn{padding:8px 10px;border:none;border-radius:6px;cursor:pointer}
+    .btn.primary{background:#22c55e;color:#062712}
+    .btn.toggle{background:#1e293b;color:#cbd5e1;margin-bottom:12px;width:100%}
+
+    #animalImg{width:100%;border-radius:8px;margin-bottom:10px}
+    #infoCard{background:#1e293b;border-radius:8px;padding:12px;margin-top:12px}
+    #infoCard h3{margin:0 0 8px 0}
+    #infoCard p{margin:4px 0}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button id="modeBtn" class="btn toggle">Editor-Modus aktivieren</button>
+
+    <img id="animalImg" src="" alt="Tier">
+
+    <h2 id="animalName"></h2>
+    <p><b>Habitat:</b> <span id="animalHab"></span></p>
+
+    <div>
+      <label>Wähle Habitat:</label>
+      <div id="habitatButtons"></div>
+    </div>
+
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button id="submitBtn" class="btn primary">Raten</button>
+      <button id="nextBtn" class="btn">Nächste Runde</button>
+    </div>
+
+    <div id="resultBox" style="margin-top:12px"></div>
+
+    <div id="infoCard" style="display:none"></div>
+  </div>
+
+  <!-- Map -->
+  <div class="mapwrap">
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script>
+// ==========================
+// HABITAT & VERBREITUNGSPOLYGONE
+// ==========================
+const HABITAT_POLYGONS = {};
+const RANGE_POLYGONS = {};
+
+// ==========================
+// TIERE & Infodateien
+// ==========================
+const ANIMALS = [
+  { name:'Afrikanischer Elefant', habitat:'Savanne', image:'https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg', infoFile:'elefant.json' },
+  { name:'Dromedar', habitat:'Wüste', image:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Dromedary_camel.jpg', infoFile:'dromedar.json' }
+];
+
+let round = 0;
+let selectedHabitat = null;
+let selectedLatLng = null;
+let marker = null;
+let editorMode = false;
+
+// ==========================
+// MAP
+// ==========================
+const map = L.map('map').setView([20,0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// EDITOR
+const drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+let drawControl = null;
+
+function enableEditor(){
+  drawControl = new L.Control.Draw({
+    edit: { featureGroup: drawnItems },
+    draw: { polygon:true, rectangle:true, marker:false, circle:false, polyline:false }
+  });
+  map.addControl(drawControl);
+}
+function disableEditor(){
+  if(drawControl) map.removeControl(drawControl);
+}
+
+map.on(L.Draw.Event.CREATED, e => {
+  const layer = e.layer;
+  drawnItems.addLayer(layer);
+  const gj = layer.toGeoJSON();
+  console.log('Neues Habitat/Range-Polygon:', JSON.stringify(gj));
+});
+
+// ==========================
+// SPIEL
+// ==========================
+function loadRound(){
+  const a = ANIMALS[round % ANIMALS.length];
+  document.getElementById('animalImg').src = a.image;
+  document.getElementById('animalName').textContent = a.name;
+  document.getElementById('animalHab').textContent = a.habitat;
+  selectedHabitat = null;
+  selectedLatLng = null;
+  if(marker) map.removeLayer(marker);
+  document.getElementById('infoCard').style.display = 'none';
+  document.getElementById('resultBox').innerHTML = '';
+}
+
+// Habitat Buttons
+const habitatList = ['Savanne','Wüste','Wald','Tundra','Grasland','Ozean','Feuchtgebiet'];
+const habEl = document.getElementById('habitatButtons');
+habitatList.forEach(h=>{
+  const b = document.createElement('button');
+  b.textContent = h;
+  b.className = 'btn';
+  b.style.marginRight = '5px';
+  b.onclick = ()=> selectedHabitat = h;
+  habEl.appendChild(b);
+});
+
+// Kartenklick
+map.on('click', e =>{
+  if(!editorMode){
+    selectedLatLng = e.latlng;
+    if(marker) map.removeLayer(marker);
+    marker = L.marker(selectedLatLng).addTo(map);
+  }
+});
+
+// ==========================
+// DISTANZLOGIK
+// ==========================
+function distanceToPolygon(point, polygon){
+  return turf.pointToPolygonDistance(point, polygon, {units:'kilometers'});
+}
+
+// ==========================
+// RATEN
+// ==========================
+async function submitGuess(){
+  const a = ANIMALS[round % ANIMALS.length];
+  if(!selectedLatLng){ alert('Bitte auf die Karte klicken!'); return; }
+  if(!selectedHabitat){ alert('Bitte Habitat wählen!'); return; }
+
+  const pt = turf.point([selectedLatLng.lng, selectedLatLng.lat]);
+
+  const habitatPoly = HABITAT_POLYGONS[a.habitat];
+  const rangePoly = RANGE_POLYGONS[a.name];
+  let points = 0;
+
+  // 1. Falsches Habitat?
+  if(selectedHabitat !== a.habitat){ points += 50; }
+  else points += 200;
+
+  // 2. Entfernung zu Habitat-Polygon
+  if(habitatPoly){
+    const d = distanceToPolygon(pt, habitatPoly);
+    if(d < 2000) points += Math.round((2000 - d) / 2000 * 300);
+  }
+
+  // 3. Entfernung zu Verbreitungsgebiet
+  if(rangePoly){
+    const d = distanceToPolygon(pt, rangePoly);
+    if(d < 2000) points += Math.round((2000 - d) / 2000 * 500);
+  }
+
+  // Ausgabe
+  document.getElementById('resultBox').innerHTML = `<b>Punkte:</b> ${points}`;
+
+  // Infokarte laden
+  loadInfo(a.infoFile);
+}
+
+document.getElementById('submitBtn').onclick = submitGuess;
+document.getElementById('nextBtn').onclick = ()=>{ round++; loadRound(); };
+
+// ==========================
+// INFO LADEN
+// ==========================
+async function loadInfo(file){
+  try{
+    const res = await fetch(file);
+    const data = await res.json();
+    const box = document.getElementById('infoCard');
+
+    box.innerHTML = `
+      <h3>${data.title}</h3>
+      <p>${data.text}</p>
+    `;
+    box.style.display = 'block';
+  }catch(e){ console.error('Info konnte nicht geladen werden:',e); }
+}
+
+// ==========================
+// EDITOR-MODUS
+// ==========================
+document.getElementById('modeBtn').onclick = ()=>{
+  editorMode = !editorMode;
+  if(editorMode){
+    enableEditor();
+    document.getElementById('modeBtn').textContent = 'Editor deaktivieren';
+  } else {
+    disableEditor();
+    document.getElementById('modeBtn').textContent = 'Editor aktivieren';
+  }
+};
+
+// Start
+loadRound();
+</script>
+</body>
+</html>
