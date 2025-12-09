@@ -37,7 +37,7 @@
     <img id="animalImg" src="" alt="Tier">
 
     <h2 id="animalName"></h2>
-    <p><b>Habitat:</b> <span id="animalHab"></span></p>
+    <p><i id="animalLatname"></i></p>
 
     <div>
       <label>Wähle Habitat:</label>
@@ -76,8 +76,8 @@ const RANGE_POLYGONS = {};
 // TIERE & Infodateien
 // ==========================
 const ANIMALS = [
-  { name:'Afrikanischer Elefant', habitat:'Savanne', image:'https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg', infoFile:'elefant.json' },
-  { name:'Dromedar', habitat:'Wüste', image:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Dromedary_camel.jpg', infoFile:'dromedar.json' }
+  { name:'Afrikanischer Elefant', latname:'Loxodonta africana', habitat:'Savanne', image:'https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg', infoFile:'elefant.json' },
+  { name:'Dromedar', latname:'Camelus dromedarius', habitat:'Wüste', image:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Dromedary_camel.jpg', infoFile:'dromedar.json' }
 ];
 
 let round = 0;
@@ -122,7 +122,7 @@ function loadRound(){
   const a = ANIMALS[round % ANIMALS.length];
   document.getElementById('animalImg').src = a.image;
   document.getElementById('animalName').textContent = a.name;
-  document.getElementById('animalHab').textContent = a.habitat;
+  document.getElementById('animalLatname').textContent = a.latname;
   selectedHabitat = null;
   selectedLatLng = null;
   if(marker) map.removeLayer(marker);
