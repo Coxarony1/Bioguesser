@@ -58,14 +58,16 @@
     /* Gesamtpunkte unten links in der Sidebar */
     #totalScoreBox{
       position:absolute;
-      left:18px;
-      bottom:12px;
-      font-size:0.95rem;
+      top:12px;
+      right:18px;
+      font-size:1.425rem;
       color:#e5e7eb;
-      padding:6px 10px;
+      padding:9px 15px;
       background:#020617;
       border-radius:999px;
-      border:1px solid #1f2937;
+      border:2px solid #7f1d1d;
+      z-index:600;
+      box-shadow:0 6px 18px rgba(0,0,0,0.55);
     }
 
     /* Nächste-Runde-Button: zentral in der Karte, groß; zunächst unsichtbar */
@@ -264,14 +266,13 @@
     <div id="resultBox" style="margin-top:12px"></div>
 
     <div id="infoCard" style="display:none"></div>
-
-    <div id="totalScoreBox">Gesamtpunkte: 0</div>
   </div>
 
   <!-- Map -->
   <div class="mapwrap">
     <button id="nextBtn" class="btn">Nächste Runde</button>
     <div id="map"></div>
+    <div id="totalScoreBox">Gesamtpunkte: 0</div>
   </div>
 
 </div>
