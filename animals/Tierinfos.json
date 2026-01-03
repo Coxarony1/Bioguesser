@@ -71,7 +71,7 @@
 
   "Berggorilla": {
     "name": "Berggorilla",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Silver_back.jpg/330px-Silver_back.jpg",
     "latin": "Gorilla beringei beringei",
     "habitat": "Bergnebelwälder (2.200–4.300 m Höhe)",
     "taxon": "",
@@ -85,7 +85,7 @@
 
   "Schneeschaf": {
     "name": "Schneeschaf",
-    "image": "",
+    "image": "https://cdn.pixabay.com/photo/2023/07/07/20/04/bighorn-sheep-8113311_960_720.jpg",
     "latin": "Ovis nivicola",
     "habitat": "Steile Gebirge, Tundra, alpine Zonen",
     "taxon": "",
@@ -100,7 +100,7 @@
 
   "Löwe": {
     "name": "Löwe",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg/330px-011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg",
     "latin": "Panthera leo",
     "habitat": "Savannen, Grasländer, lichte Wälder",
     "taxon": "",
@@ -116,7 +116,7 @@
 
   "Bison": {
     "name": "Bison",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Wisent.jpg/250px-Wisent.jpg",
     "latin": "Bison bison / Bison bonasus",
     "habitat": "Prärien, offene Wälder, Steppen",
     "taxon": "",
@@ -131,7 +131,7 @@
 
   "Okapi": {
     "name": "Okapi",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Saint-Aignan_%28Loir-et-Cher%29._Okapi.jpg/330px-Saint-Aignan_%28Loir-et-Cher%29._Okapi.jpg",
     "latin": "Okapia johnstoni",
     "habitat": "Dichte tropische Regenwälder",
     "taxon": "",
@@ -144,8 +144,8 @@
   },
 
   "Tapir": {
-    "name": "Tapir",
-    "image": "",
+    "name": "Flachlandtapir",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Tap%C3%ADr_5.jpg/330px-Tap%C3%ADr_5.jpg",
     "latin": "Tapirus terrestris",
     "habitat": "Regenwälder, Sumpfwälder, Feuchtgebiete",
     "taxon": "",
@@ -158,8 +158,8 @@
   },
 
   "Luchs": {
-    "name": "Luchs",
-    "image": "",
+    "name": "Eurasischer Luchs",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lynx_lynx_1_%28Martin_Mecnarowski%29.jpg/330px-Lynx_lynx_1_%28Martin_Mecnarowski%29.jpg",
     "latin": "Lynx lynx",
     "habitat": "Nadel- und Mischwälder",
     "taxon": "",
@@ -188,7 +188,7 @@
 
   "Andenkondor": {
     "name": "Andenkondor",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Peru_-_Colca_Canyon_-_Andean_condor_%28Vultur_gryphus%29_01.jpg/250px-Peru_-_Colca_Canyon_-_Andean_condor_%28Vultur_gryphus%29_01.jpg",
     "latin": "Vultur gryphus",
     "habitat": "Hochgebirge, Felsregionen, Andenhänge",
     "taxon": "",
@@ -202,7 +202,7 @@
 
   "Goldfasan": {
     "name": "Goldfasan",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Goldfasan.jpg/330px-Goldfasan.jpg",
     "latin": "Chrysolophus pictus",
     "habitat": "Bergwälder, Bambusdickichte",
     "taxon": "",
@@ -217,7 +217,7 @@
 
   "Chamäleon": {
     "name": "Gewöhnliches Chamäleon",
-    "image": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Gew%C3%B6hnliches_Cham%C3%A4leon.jpg/330px-Gew%C3%B6hnliches_Cham%C3%A4leon.jpg",
     "latin": "Chamaeleo chamaeleon",
     "habitat": "Buschland, lichte Wälder, Savannen",
     "taxon": "",
@@ -231,8 +231,8 @@
   },
 
   "Vogelspinne": {
-    "name": "Vogelspinne",
-    "image": "",
+    "name": "Riesenvogelspinne",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/THERAPHOSA_BLONDI_HEMBRA_ADULTA.jpg/330px-THERAPHOSA_BLONDI_HEMBRA_ADULTA.jpg",
     "latin": "Theraphosa blondi",
     "habitat": "Tropische Regenwälder, feuchte Waldböden",
     "taxon": "",
