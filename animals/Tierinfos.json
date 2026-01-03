@@ -67,5 +67,180 @@
         "coordinates": [[[10, -30], [35, -30], [40, -10], [20, -5], [5, -10], [10, -30]]]
       }
     }
+  },
+
+  "Berggorilla": {
+    "name": "Berggorilla",
+    "image": "",
+    "latin": "Gorilla beringei beringei",
+    "habitat": "Bergnebelwälder (2.200–4.300 m Höhe)",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[19.08,4.43],[15.92,-6.08],[30.70,-12.90],[32.05,3.79],[19.08,4.43]]]}}
+      ]
+    }
+  },
+
+  "Schneeschaf": {
+    "name": "Schneeschaf",
+    "image": "",
+    "latin": "Ovis nivicola",
+    "habitat": "Steile Gebirge, Tundra, alpine Zonen",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[100.72,75.79],[99.18,60.83],[135.19,54.71],[184.48,66.01],[100.72,75.79]]]}}
+      ]
+    }
+  }
+,
+
+  "Löwe": {
+    "name": "Löwe",
+    "image": "",
+    "latin": "Panthera leo",
+    "habitat": "Savannen, Grasländer, lichte Wälder",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[40.45,-10.57],[41.09,4.27],[38.40,3.78],[36.18,4.51],[34.79,4.07],[34.38,0.30],[31.58,-0.90],[30.18,-3.17],[29.34,-5.42],[31.10,-8.52],[33.94,-9.71],[40.45,-10.57]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[12.67,-17.01],[15.34,-27.12],[19.03,-34.53],[17.33,-30.30],[23.15,-33.90],[29.30,-32.41],[32.62,-27.62],[29.39,-22.29],[25.31,-17.86],[12.67,-17.01]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[69.28,23.44],[76.53,8.43],[79.02,9.48],[80.99,13.16],[83.73,17.63],[87.58,21.42],[83.74,26.02],[78.24,27.94],[71.94,27.95],[69.28,23.44]]]}}
+      ]
+    }
+  },
+
+  "Bison": {
+    "name": "Bison",
+    "image": "",
+    "latin": "Bison bison / Bison bonasus",
+    "habitat": "Prärien, offene Wälder, Steppen",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[14.70,53.68],[20.36,45.51],[23.40,43.90],[29.16,44.20],[30.36,55.69],[14.70,53.68]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-138.12,60.90],[-123.01,35.60],[-111.20,24.31],[-97.47,25.00],[-83.72,29.94],[-75.57,44.91],[-95.87,60.02],[-138.12,60.90]]]}}
+      ]
+    }
+  },
+
+  "Okapi": {
+    "name": "Okapi",
+    "image": "",
+    "latin": "Okapia johnstoni",
+    "habitat": "Dichte tropische Regenwälder",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[18.87,4.79],[15.80,-5.31],[25.91,-11.67],[30.79,-8.17],[30.07,4.20],[18.87,4.79]]]}}
+      ]
+    }
+  },
+
+  "Tapir": {
+    "name": "Tapir",
+    "image": "",
+    "latin": "Tapirus terrestris",
+    "habitat": "Regenwälder, Sumpfwälder, Feuchtgebiete",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-76.16,9.54],[-80.91,-4.88],[-68.73,-52.66],[-49.62,-30.96],[-35.30,-7.92],[-61.32,8.99],[-76.16,9.54]]]}}
+      ]
+    }
+  },
+
+  "Luchs": {
+    "name": "Luchs",
+    "image": "",
+    "latin": "Lynx lynx",
+    "habitat": "Nadel- und Mischwälder",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[8.38,52.78],[3.58,46.51],[12.61,41.87],[21.66,39.78],[31.01,46.46],[23.11,53.73],[8.38,52.78]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[32.83,61.39],[45.56,47.20],[137.55,45.70],[158.32,68.62],[32.83,61.39]]]}}
+      ]
+    }
+  },
+
+  "Kängururatte": {
+    "name": "Kängururatte",
+    "image": "",
+    "latin": "Dipodomys ordii",
+    "habitat": "Trockengebiete, Wüsten, Halbwüsten",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-123.32,40.61],[-104.82,20.69],[-97.15,25.57],[-105.57,37.90],[-123.32,40.61]]]}}
+      ]
+    }
+  },
+
+  "Andenkondor": {
+    "name": "Andenkondor",
+    "image": "",
+    "latin": "Vultur gryphus",
+    "habitat": "Hochgebirge, Felsregionen, Andenhänge",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-77.23,12.02],[-87.63,-48.00],[-51.49,-51.94],[-58.90,10.83],[-77.23,12.02]]]}}
+      ]
+    }
+  },
+
+  "Goldfasan": {
+    "name": "Goldfasan",
+    "image": "",
+    "latin": "Chrysolophus pictus",
+    "habitat": "Bergwälder, Bambusdickichte",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-3.41,58.26],[-7.19,56.68],[-4.73,50.06],[2.60,52.26],[-3.41,58.26]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[103.67,35.42],[84.07,45.67],[77.85,30.44],[107.64,22.51],[103.67,35.42]]]}}
+      ]
+    }
+  },
+
+  "Chamäleon": {
+    "name": "Gewöhnliches Chamäleon",
+    "image": "",
+    "latin": "Chamaeleo chamaeleon",
+    "habitat": "Buschland, lichte Wälder, Savannen",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-7.73,43.64],[-8.77,36.05],[-1.07,36.28],[3.30,42.24],[-7.73,43.64]]]}}
+        ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-6.36,35.20],[-15.23,23.58],[36.94,21.71],[33.97,31.47],[10.89,36.88],[-6.36,35.20]]]}}
+      ]
+    }
+  },
+
+  "Vogelspinne": {
+    "name": "Vogelspinne",
+    "image": "",
+    "latin": "Theraphosa blondi",
+    "habitat": "Tropische Regenwälder, feuchte Waldböden",
+    "taxon": "",
+    "distribution": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-80.28,1.74],[-43.81,-4.16],[-51.90,10.69],[-75.34,11.20],[-80.28,1.74]]]}}
+      ]
+    }
   }
 }

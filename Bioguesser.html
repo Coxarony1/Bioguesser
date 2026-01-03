@@ -298,9 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if(startScreen){
         startScreen.style.display = 'none';
       }
+      // New game: reset shown cards and pick first random animal
+      shownIndices.clear();
+      currentIndex = pickRandomIndex();
       setTimeout(() => {
         map.invalidateSize();
         map.setView([20, 0], 2);
+        loadRound();
       }, 100);
     });
   }
@@ -340,6 +344,8 @@ let selectedLatLng = null;
 let marker = null;
 let lastRangeLayer = null;
 let totalScore = 0;
+let shownIndices = new Set();
+let currentIndex = null;
 
 // ==========================
 // Punkte-Anzeige
@@ -360,11 +366,28 @@ function resetButtonStates(){
   });
 }
 
+function pickRandomIndex(){
+  if(!ANIMALS || ANIMALS.length === 0) return -1;
+  if(shownIndices.size >= ANIMALS.length) return -1;
+  const remaining = [];
+  for(let i=0;i<ANIMALS.length;i++) if(!shownIndices.has(i)) remaining.push(i);
+  const idx = remaining[Math.floor(Math.random()*remaining.length)];
+  shownIndices.add(idx);
+  return idx;
+}
+
 function loadRound(){
-  const a = ANIMALS[round % ANIMALS.length];
-  document.getElementById('animalImg').src = a.image;
-  document.getElementById('animalName').textContent = a.name;
-  document.getElementById('animalLatname').textContent = a.latin;
+  if(currentIndex === null){
+    currentIndex = pickRandomIndex();
+  }
+  if(currentIndex === -1 || currentIndex === null){
+    alert('Alle Karten wurden gezeigt. Das Spiel ist beendet.');
+    return;
+  }
+  const a = ANIMALS[currentIndex];
+  document.getElementById('animalImg').src = a.image || '';
+  document.getElementById('animalName').textContent = a.name || '';
+  document.getElementById('animalLatname').textContent = a.latin || '';
 
   selectedHabitat = null;
   selectedTaxon = null;
@@ -439,7 +462,7 @@ function distanceToPolygon(point, polygon){
 // RATEN
 // ==========================
 async function submitGuess(){
-  const a = ANIMALS[round % ANIMALS.length];
+  const a = ANIMALS[currentIndex];
   if(!selectedLatLng){ alert('Bitte auf die Karte klicken!'); return; }
   if(!selectedHabitat){ alert('Bitte Habitat wählen!'); return; }
   if(!selectedTaxon){ alert('Bitte taxonomische Einordnung wählen!'); return; }
@@ -537,7 +560,13 @@ document.getElementById('submitBtn').onclick = submitGuess;
 // NÄCHSTE RUNDE
 // ==========================
 document.getElementById('nextBtn').onclick = () => {
-  round++;
+  const idx = pickRandomIndex();
+  if(idx === -1){
+    alert('Alle Karten wurden gezeigt. Das Spiel ist beendet.');
+    document.getElementById('nextBtn').style.display = 'none';
+    return;
+  }
+  currentIndex = idx;
   loadRound();
 };
 
@@ -560,6 +589,8 @@ async function loadInfo(file){
 
 // Start
 loadAnimalsFromJSON().then(() => {
+  // prepare first index but only show after game start; still pick one so UI has data if needed
+  currentIndex = pickRandomIndex();
   loadRound();
   updateTotalScore();
 });
