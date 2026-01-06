@@ -74,7 +74,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Silver_back.jpg/330px-Silver_back.jpg",
     "latin": "Gorilla beringei beringei",
     "habitat": "Bergnebelwälder (2.200–4.300 m Höhe)",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -88,7 +88,7 @@
     "image": "https://cdn.pixabay.com/photo/2023/07/07/20/04/bighorn-sheep-8113311_960_720.jpg",
     "latin": "Ovis nivicola",
     "habitat": "Steile Gebirge, Tundra, alpine Zonen",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -103,7 +103,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg/330px-011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg",
     "latin": "Panthera leo",
     "habitat": "Savannen, Grasländer, lichte Wälder",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -119,7 +119,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Wisent.jpg/250px-Wisent.jpg",
     "latin": "Bison bison / Bison bonasus",
     "habitat": "Prärien, offene Wälder, Steppen",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -134,7 +134,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Saint-Aignan_%28Loir-et-Cher%29._Okapi.jpg/330px-Saint-Aignan_%28Loir-et-Cher%29._Okapi.jpg",
     "latin": "Okapia johnstoni",
     "habitat": "Dichte tropische Regenwälder",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -148,7 +148,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Tap%C3%ADr_5.jpg/330px-Tap%C3%ADr_5.jpg",
     "latin": "Tapirus terrestris",
     "habitat": "Regenwälder, Sumpfwälder, Feuchtgebiete",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -162,7 +162,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lynx_lynx_1_%28Martin_Mecnarowski%29.jpg/330px-Lynx_lynx_1_%28Martin_Mecnarowski%29.jpg",
     "latin": "Lynx lynx",
     "habitat": "Nadel- und Mischwälder",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -177,7 +177,7 @@
     "image": "",
     "latin": "Dipodomys ordii",
     "habitat": "Trockengebiete, Wüsten, Halbwüsten",
-    "taxon": "",
+    "taxon": "Säugetiere",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -191,7 +191,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Peru_-_Colca_Canyon_-_Andean_condor_%28Vultur_gryphus%29_01.jpg/250px-Peru_-_Colca_Canyon_-_Andean_condor_%28Vultur_gryphus%29_01.jpg",
     "latin": "Vultur gryphus",
     "habitat": "Hochgebirge, Felsregionen, Andenhänge",
-    "taxon": "",
+    "taxon": "Vögel",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -205,7 +205,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Goldfasan.jpg/330px-Goldfasan.jpg",
     "latin": "Chrysolophus pictus",
     "habitat": "Bergwälder, Bambusdickichte",
-    "taxon": "",
+    "taxon": "Vögel",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -220,7 +220,7 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Gew%C3%B6hnliches_Cham%C3%A4leon.jpg/330px-Gew%C3%B6hnliches_Cham%C3%A4leon.jpg",
     "latin": "Chamaeleo chamaeleon",
     "habitat": "Buschland, lichte Wälder, Savannen",
-    "taxon": "",
+    "taxon": "Reptilien",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
@@ -235,12 +235,144 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/THERAPHOSA_BLONDI_HEMBRA_ADULTA.jpg/330px-THERAPHOSA_BLONDI_HEMBRA_ADULTA.jpg",
     "latin": "Theraphosa blondi",
     "habitat": "Tropische Regenwälder, feuchte Waldböden",
-    "taxon": "",
+    "taxon": "Gliederfüßer",
     "distribution": {
       "type": "FeatureCollection",
       "features": [
         {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-80.28,1.74],[-43.81,-4.16],[-51.90,10.69],[-75.34,11.20],[-80.28,1.74]]]}}
       ]
     }
+  }
+,
+  "Eisbär": {
+    "name": "Eisbär",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Polar_Bear_-_Alaska_%28cropped%29.jpg/330px-Polar_Bear_-_Alaska_%28cropped%29.jpg",
+    "latin": "Ursus maritimus",
+    "status": "gefährdet",
+    "endangeredness": "Gefährdet",
+    "taxon": "Säuger",
+    "habitat": "Eis / Arktis",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-136.88,70.95],[-95.34,67.43],[-67.04,60.84],[-13.95,60.44],[-11.77,76.38],[49.99,71.56],[112.98,79.63],[-15.96,84.57],[-87.86,83.04],[-136.88,70.95]]]}}]}
+  },
+
+  "Asiatischer_Gepard": {
+    "name": "Asiatischer Gepard",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Delbar_%28Iranian_Cheetah%29_01_%28cropped%29.jpg/325px-Delbar_%28Iranian_Cheetah%29_01_%28cropped%29.jpg",
+    "latin": "Acinonyx jubatus venaticus",
+    "status": "gefährdet",
+    "endangeredness": "Gefährdet",
+    "taxon": "Säuger",
+    "habitat": "Wüste",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[51.24,35.00],[55.38,31.36],[60.29,31.17],[58.94,36.27],[51.24,35.00]]]}}]}
+  },
+
+  "Borneo_Orang-Utan": {
+    "name": "Borneo Orang-Utan",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Bornean_orangutan_%28Pongo_pygmaeus%29%2C_Tanjung_Putting_National_Park_08.jpg/330px-Bornean_orangutan_%28Pongo_pygmaeus%29%2C_Tanjung_Putting_National_Park_08.jpg",
+    "latin": "Pongo pygmaeus",
+    "status": "stark gefährdet",
+    "endangeredness": "Stark gefährdet",
+    "habitat": "Tropischer Regenwald",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[109.43,0.53],[111.52,-3.05],[116.08,-2.91],[113.40,1.23],[109.43,0.53]]]}} , {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[115.92,5.72],[115.85,4.18],[118.65,5.15],[117.23,6.13],[115.92,5.72]]]}} , {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[116.10,3.10],[117.28,1.60],[117.54,3.10],[116.10,3.10]]]}} , {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[95.30,5.43],[98.08,2.25],[98.22,4.32],[95.30,5.43]]]}} ]}
+  },
+
+  "Rentier": {
+    "name": "Rentier",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Reinbukken_p%C3%A5_frisk_gr%C3%B8nt_beite._-_panoramio.jpg/330px-Reinbukken_p%C3%A5_frisk_gr%C3%B8nt_beite._-_panoramio.jpg",
+    "latin": "Rangifer tarandus",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Tundra, Taiga",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-160.86,64.56],[-60.13,51.80],[-52.28,81.27],[-114.72,78.68],[-160.86,64.56]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-52.06,74.18],[-50.58,64.32],[-44.35,60.92],[-50.12,63.23],[-41.67,64.42],[-52.06,74.18]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-12.71,81.49],[-27.95,75.60],[-22.51,71.74],[-12.71,81.49]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[13.92,66.31],[169.36,61.43],[185.75,66.74],[96.18,75.44],[13.92,66.31]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[25.71,80.22],[11.17,79.59],[15.98,77.10],[23.82,77.59],[25.71,80.22]]]}} ]}
+  },
+
+  "Pazifisches_Walross": {
+    "name": "Pazifisches Walross",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Pacific_Walrus_-_Bull_%288247646168%29.jpg/330px-Pacific_Walrus_-_Bull_%288247646168%29.jpg",
+    "latin": "Odobenus rosmarus",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Arktis",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[166.33,60.59],[186.22,65.65],[173.54,70.48],[156.24,70.48],[166.33,60.59]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[151.03,71.33],[141.81,76.34],[107.51,73.25],[128.55,71.05],[151.03,71.33]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[105.49,73.17],[114.14,76.41],[97.71,81.25],[82.44,72.49],[105.49,73.17]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[85.07,72.01],[55.39,77.04],[41.55,65.83],[80.75,66.87],[85.07,72.01]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-122.02,71.16],[-76.86,58.88],[-45.42,73.69],[-85.27,81.82],[-122.02,71.16]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-28.84,83.12],[-25.79,71.21],[-7.18,81.16],[-28.84,83.12]]]}} ]}
+  },
+
+  "Grauwolf": {
+    "name": "Grauwolf (eurasischer Wolf)",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Eurasischer_Wolf_Tiergarten_Worms_2011.JPG/330px-Eurasischer_Wolf_Tiergarten_Worms_2011.JPG",
+    "latin": "Canis lupus",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Wälder, Tundra",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-6.84,43.28],[39.28,49.57],[34.82,68.76],[12.71,64.66],[-6.84,43.28]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[39.29,68.30],[91.66,30.81],[121.80,34.57],[159.64,62.90],[39.29,68.30]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[38.42,67.62],[40.97,41.64],[52.66,40.52],[55.64,57.10],[38.42,67.62]]]}} ]}
+  },
+
+  "Nilpferd": {
+    "name": "Nilpferd",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Hipop%C3%B3tamo_%28Hippopotamus_amphibius%29%2C_parque_nacional_de_Chobe%2C_Botsuana%2C_2018-07-28%2C_DD_80.jpg/330px-Hipop%C3%B3tamo_%28Hippopotamus_amphibius%29%2C_parque_nacional_de_Chobe%2C_Botsuana%2C_2018-07-28%2C_DD_80.jpg",
+    "latin": "Hippopotamus amphibius",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Flüsse, Seen und Sümpfe",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-15.41,17.79],[35.67,-24.00],[34.68,-19.87],[40.34,-14.05],[39.35,-3.92],[49.22,7.44],[50.81,11.42],[38.82,17.38],[33.41,16.16],[18.13,14.83],[1.94,16.35],[-15.41,17.79]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[35.28,-24.23],[19.55,-34.60],[22.37,-34.09],[25.27,-34.15],[28.64,-32.12],[31.13,-30.08],[32.69,-27.68],[35.28,-24.23]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[34.59,-23.62],[12.20,-6.06],[13.21,-9.63],[12.31,-14.83],[12.07,-18.20],[13.99,-22.46],[14.62,-25.61],[16.50,-28.67],[17.75,-31.79],[19.01,-34.15],[29.66,-27.43],[34.59,-23.62]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-15.77,17.21],[-17.07,14.71],[-15.94,12.12],[-12.66,8.45],[-9.89,5.76],[-7.19,5.01],[-3.74,5.01],[-1.31,5.06],[-15.77,17.21]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[36.42,21.99],[25.36,22.07],[24.14,19.64],[23.58,15.45],[38.78,17.71],[36.42,21.99]]]}} ]}
+  },
+
+  "Grosser_Panda": {
+    "name": "Großer Panda",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Grosser_Panda.JPG/330px-Grosser_Panda.JPG",
+    "latin": "Ailuropoda melanoleuca",
+    "status": "gefährdet",
+    "endangeredness": "Gefährdet",
+    "habitat": "Bambuswälder",
+    "taxon": "Säuger",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[104.35,34.44],[107.03,30.03],[109.50,34.56],[104.35,34.44]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[111.14,37.85],[111.76,35.71],[113.67,38.37],[111.14,37.85]]]}} ]}
+  },
+
+  "Gemeiner_Delfin": {
+    "name": "Gemeiner Delfin",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Delphinus_delphis_03-cropped.jpg/330px-Delphinus_delphis_03-cropped.jpg",
+    "latin": "Delphinus delphis",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Ozean",
+    "taxon": "Säugetiere",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-215.77,48.30],[-233.00,17.09],[-202.68,-44.19],[-84.16,-45.06],[-85.02,1.33],[-128.54,43.39],[-215.77,48.30]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-73.59,34.57],[-3.96,-3.30],[-21.17,3.50],[-21.34,18.21],[-13.37,32.30],[-9.15,46.46],[-12.02,54.36],[-20.60,63.11],[-48.18,59.08],[-73.59,34.57]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-73.05,32.23],[-78.54,28.29],[-71.02,22.52],[-62.97,12.99],[-54.77,8.11],[-45.88,2.11],[-36.72,-1.77],[-31.94,-8.84],[-24.95,6.73],[-73.05,32.23]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-24.12,0.71],[-45.62,-28.17],[-63.03,-48.41],[-40.88,-50.53],[-11.99,-47.50],[8.63,-43.74],[13.46,-31.75],[1.98,-4.02],[-24.12,0.71]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[38.85,-31.79],[60.61,-38.59],[89.68,-38.13],[111.43,-34.01],[114.36,-14.82],[101.27,-2.92],[89.70,14.36],[67.17,17.69],[48.83,0.91],[38.85,-31.79]]]}} ]}
+  },
+
+  "Strauss": {
+    "name": "Strauss",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Ostriches_cape_point.jpg/330px-Ostriches_cape_point.jpg",
+    "latin": "Struthio camelus",
+    "status": "nicht angegeben",
+    "endangeredness": "nicht gefährdet",
+    "habitat": "Savanne",
+    "taxon": "Vögel",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-11.95,27.55],[-16.16,22.86],[-16.16,17.54],[-6.60,16.92],[9.76,15.05],[23.22,13.80],[33.75,13.80],[35.86,6.78],[40.72,15.52],[36.02,23.46],[32.29,29.12],[-11.95,27.55]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[35.86,6.14],[38.29,-4.22],[49.88,10.18],[41.94,13.67],[35.86,6.14]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[13.70,-11.94],[31.85,-28.45],[34.60,-23.79],[36.87,-16.65],[13.70,-11.94]]]}} ,{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[14.37,-12.76],[11.77,-16.50],[13.65,-21.50],[15.00,-26.02],[17.42,-30.14],[19.94,-33.94],[23.53,-34.24],[27.48,-33.57],[30.26,-30.37],[14.37,-12.76]]]}} ]}
+  },
+
+  "Komodowaran": {
+    "name": "Komodowaran",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Komodo_Dragons_in_the_wild_on_Rinca_island_Indonesia..jpg/330px-Komodo_Dragons_in_the_wild_on_Rinca_island_Indonesia..jpg",
+    "latin": "Varanus komodoensis",
+    "status": "gefährdet",
+    "endangeredness": "Gefährdet",
+    "habitat": "Savanne, Buschland und tropische Wälder",
+    "taxon": "Reptilien",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[120.89,18.53],[120.20,16.16],[120.97,12.67],[122.13,10.65],[122.86,9.21],[121.75,6.58],[126.59,7.81],[125.18,5.90],[126.46,8.75],[125.13,12.46],[128.44,11.32],[125.22,13.04],[120.89,18.53]]]}}]}
+  },
+
+  "Axolotl": {
+    "name": "Axolotl",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Axolotl_Uni_Konstanz.JPG/330px-Axolotl_Uni_Konstanz.JPG",
+    "latin": "Ambystoma mexicanum",
+    "status": "stark gefährdet",
+    "endangeredness": "Stark gefährdet",
+    "habitat": "Süßwasserseen und Kanäle",
+    "taxon": "Amphibie",
+    "distribution": {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[-96.97,17.25],[-97.16,16.41],[-96.21,16.38],[-96.02,17.22],[-96.97,17.25]]]}}]}
   }
 }
