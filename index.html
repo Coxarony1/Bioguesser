@@ -130,6 +130,24 @@
       padding:0;
     }
     .app.collapsed #sidebarToggle{ left:0; right:auto; }
+    @media (max-width:800px){
+      /* On mobile keep toggle visible and reachable by fixing it to the viewport */
+      #sidebarToggle{
+        position:fixed !important;
+        top:12px !important;
+        left:8px !important;
+        right:auto !important;
+        width:40px !important;
+        height:40px !important;
+        border-radius:8px !important;
+        z-index:1100 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+      /* When collapsed, keep it at same fixed position */
+      .app.collapsed #sidebarToggle{ left:8px !important; }
+    }
     /* When the sidebar is visible, push the arrow to the far left of the toggle for visibility */
     .app:not(.collapsed) #sidebarToggle{ justify-content:flex-start; padding-left:6px; }
 
