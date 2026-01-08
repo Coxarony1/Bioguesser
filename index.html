@@ -10,26 +10,42 @@
 
   <style>
     body{margin:0;font-family:Inter,Arial;background:#0c111b;color:#e8eef5}
-    .app{display:grid;grid-template-columns:340px 1fr;height:100vh}
+    .app{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow-x:hidden}
+    .app.collapsed{grid-template-columns:0 1fr}
     .sidebar{
       padding:18px;
       background:#111827;
-      overflow-y:auto;
       position:relative;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      justify-content:flex-start;
+      overflow:hidden; /* avoid scrollbars; content is responsive */
+      height:100vh;
     }
     .mapwrap{position:relative}
     #map{height:100%;width:100%}
 
     .btn{
-      padding:8px 10px;
+      padding:clamp(6px,1.2vh,10px) clamp(8px,1.6vw,12px);
       border:none;
       border-radius:6px;
       cursor:pointer;
-      font-size:0.95rem;
+      font-size:clamp(0.82rem,1.6vw,1rem);
     }
     .btn.primary{background:#22c55e;color:#062712}
 
-    #animalImg{width:100%;border-radius:8px;margin-bottom:10px}
+    .img-wrap{width:100%;max-height:calc(100vh - 260px);overflow:hidden;border-radius:8px;margin-bottom:10px}
+    #animalImg{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+
+    /* Responsive text & controls to avoid vertical/horizontal scrolling */
+    #animalName{font-size:clamp(1.05rem,2.2vw,1.25rem);margin:8px 0 4px}
+    #animalLatname{font-size:clamp(0.9rem,1.6vw,1rem);color:#9ca3af;margin:0 0 8px}
+    #habitatButtons, #taxonButtons{display:flex;flex-wrap:wrap;gap:6px}
+    #resultBox{font-size:clamp(0.9rem,1.6vw,1rem)}
+    #infoCard{font-size:clamp(0.85rem,1.5vw,0.98rem)}
+    label{font-size:clamp(0.92rem,1.8vw,1rem)}
     #infoCard{background:#1e293b;border-radius:8px;padding:12px;margin-top:12px}
     #infoCard h3{margin:0 0 8px 0}
     #infoCard p{margin:4px 0}
@@ -91,6 +107,31 @@
     #nextBtn:hover{
       background:#0284c7;
     }
+
+    /* Sidebar toggle button (border between sidebar and map) */
+    #sidebarToggle{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      right:-20px; /* attach to right edge of sidebar (half of width) */
+      width:40px; /* doubled width */
+      height:52px;
+      border-radius:8px;
+      background:#1f2937;
+      color:#e5e7eb;
+      border:2px solid rgba(255,255,255,0.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      z-index:900;
+      box-shadow:0 6px 18px rgba(0,0,0,0.35);
+      font-size:16px;
+      padding:0;
+    }
+    .app.collapsed #sidebarToggle{ left:0; right:auto; }
+    /* When the sidebar is visible, push the arrow to the far left of the toggle for visibility */
+    .app:not(.collapsed) #sidebarToggle{ justify-content:flex-start; padding-left:6px; }
 
     /* --------- STARTSEITE / LANDING PAGE --------- */
     #startScreen{
@@ -247,7 +288,9 @@
   <!-- Sidebar -->
   <div class="sidebar">
 
-    <img id="animalImg" src="" alt="Tier">
+    <div class="img-wrap">
+      <img id="animalImg" src="" alt="Tier">
+    </div>
 
     <h2 id="animalName"></h2>
     <p><i id="animalLatname"></i></p>
@@ -269,6 +312,7 @@
     <div id="resultBox" style="margin-top:12px"></div>
 
     <div id="infoCard" style="display:none"></div>
+    <button id="sidebarToggle" title="Verstecken/Anzeigen">◀</button>
   </div>
 
   <!-- Map -->
@@ -392,6 +436,15 @@ function loadRound(){
   document.getElementById('animalImg').src = a.image || '';
   document.getElementById('animalName').textContent = a.name || '';
   document.getElementById('animalLatname').textContent = a.latin || '';
+
+  // Ensure sidebar scrolls to bottom so buttons are visible when image is large
+  const sidebarEl = document.querySelector('.sidebar');
+  const imgEl = document.getElementById('animalImg');
+  if(sidebarEl && imgEl){
+    imgEl.onload = () => { sidebarEl.scrollTop = sidebarEl.scrollHeight; };
+    // If image already loaded from cache, scroll immediately
+    if(imgEl.complete) sidebarEl.scrollTop = sidebarEl.scrollHeight;
+  }
 
   selectedHabitat = null;
   selectedTaxon = null;
@@ -696,6 +749,23 @@ loadAnimalsFromJSON().then(() => {
   loadRound();
   updateTotalScore();
 });
+
+// Sidebar toggle behavior
+const appEl = document.querySelector('.app');
+const toggleBtn = document.getElementById('sidebarToggle');
+function updateToggleIcon(){
+  if(appEl.classList.contains('collapsed')) toggleBtn.textContent = '▶';
+  else toggleBtn.textContent = '◀';
+}
+if(toggleBtn && appEl){
+  toggleBtn.addEventListener('click', ()=>{
+    appEl.classList.toggle('collapsed');
+    updateToggleIcon();
+    // Ensure map is resized after layout change
+    setTimeout(()=> map.invalidateSize(), 220);
+  });
+}
+updateToggleIcon();
 </script>
 </body>
 </html>
