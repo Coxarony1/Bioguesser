@@ -222,6 +222,9 @@
       <p><b>Punkte sammeln:</b></p>
       <ul>
         <li>Trefft ihr den Bereich des Lebensraums korrekt: <b>+1000 Punkte</b></li>
+        <li>Seid ihr bis 100km daneben: <b>+500 Punkte</b></li>
+        <li>Seid ihr bis 500km daneben: <b>+200 Punkte</b></li>
+        <li>Seid ihr bis 1000km daneben: <b>+50 Punkte</b></li>
         <li>Richtige taxonomische Einordnung: <b>+200 Punkte</b></li>
         <li>Richtige Habitat-Zuordnung: <b>+200 Punkte</b></li>
       </ul>
@@ -343,6 +346,7 @@ let selectedTaxon = null;
 let selectedLatLng = null;
 let marker = null;
 let lastRangeLayer = null;
+let lastDistanceLayer = null;
 let totalScore = 0;
 let shownIndices = new Set();
 let currentIndex = null;
@@ -396,6 +400,7 @@ function loadRound(){
   selectedLatLng = null;
   if(marker) map.removeLayer(marker);
   if(lastRangeLayer){ map.removeLayer(lastRangeLayer); lastRangeLayer = null; }
+  if(lastDistanceLayer){ map.removeLayer(lastDistanceLayer); lastDistanceLayer = null; }
   document.getElementById('infoCard').style.display = 'none';
   document.getElementById('resultBox').innerHTML = '';
 
@@ -455,7 +460,58 @@ map.on('click', e =>{
 // DISTANZLOGIK
 // ==========================
 function distanceToPolygon(point, polygon){
-  return turf.pointToPolygonDistance(point, polygon, {units:'kilometers'});
+  // Normalize and compute distance via closest point helper so we support
+  // Feature, Geometry and FeatureCollection inputs.
+  const closest = closestPointOnPolygon(point, polygon);
+  return closest.distance;
+}
+
+// Returns true if point is inside any polygon/feature. Supports FeatureCollection.
+function pointInPolygonAny(point, polygon){
+  if(!polygon) return false;
+  if(polygon.type === 'FeatureCollection'){
+    return polygon.features.some(f => turf.booleanPointInPolygon(point, f));
+  }
+  // For Feature or Geometry
+  return turf.booleanPointInPolygon(point, polygon);
+}
+
+// Find closest point on a Polygon or MultiPolygon to `point` (both GeoJSON features)
+function closestPointOnPolygon(point, polygon){
+  // Accept Feature, Geometry or FeatureCollection
+  if(!polygon) return {distance: Infinity, coord: null};
+
+  if(polygon.type === 'FeatureCollection'){
+    let best = {distance: Infinity, coord: null};
+    polygon.features.forEach(f => {
+      const c = closestPointOnPolygon(point, f);
+      if(c.distance < best.distance){ best = c; }
+    });
+    return best;
+  }
+
+  let geom = polygon.type === 'Feature' ? polygon.geometry : polygon;
+  let minDist = Infinity;
+  let nearestCoord = null;
+
+  function checkCoords(coords){
+    // coords is an array of positions making a linear ring or linestring
+    try{
+      const line = turf.lineString(coords);
+      const nearest = turf.nearestPointOnLine(line, point);
+      const d = turf.distance(point, nearest, {units:'kilometers'});
+      if(d < minDist){ minDist = d; nearestCoord = nearest.geometry.coordinates; }
+    }catch(e){ /* ignore malformed rings */ }
+  }
+
+  if(!geom) return {distance: Infinity, coord: null};
+  if(geom.type === 'Polygon'){
+    geom.coordinates.forEach(ring => checkCoords(ring));
+  } else if(geom.type === 'MultiPolygon'){
+    geom.coordinates.forEach(p => p.forEach(ring => checkCoords(ring)));
+  }
+
+  return { distance: minDist, coord: nearestCoord };
 }
 
 // ==========================
@@ -485,15 +541,26 @@ async function submitGuess(){
     if(d < 2000) points += Math.round((2000 - d) / 2000 * 300);
   }
 
-  // Verbreitungsgebiet
+  // Verbreitungsgebiet: inside -> +1000, otherwise compute distance and award by bands.
+  let rangeDistanceKm = null;
+  let nearestCoord = null;
+  let insideRange = false;
+  let rangePoints = 0;
   if(rangePoly){
     try{
-      const insideRange = turf.booleanPointInPolygon(pt, rangePoly);
+      insideRange = pointInPolygonAny(pt, rangePoly);
       if(insideRange){
-        points += 1000;
+        rangePoints = 1000;
       } else {
-        const d = distanceToPolygon(pt, rangePoly);
-        if(d < 2000) points += Math.round((2000 - d) / 2000 * 500);
+        const closest = closestPointOnPolygon(pt, rangePoly);
+        rangeDistanceKm = closest.distance;
+        nearestCoord = closest.coord; // [lng, lat]
+
+        if(rangeDistanceKm !== null && isFinite(rangeDistanceKm)){
+          if(rangeDistanceKm <= 100) rangePoints = 500;
+          else if(rangeDistanceKm <= 500) rangePoints = 200;
+          else if(rangeDistanceKm <= 1000) rangePoints = 50;
+        }
       }
     }catch(e){
       console.warn('Fehler beim Prüfen des Verbreitungsgebiets:', e);
@@ -501,6 +568,9 @@ async function submitGuess(){
   } else {
     console.log(`Kein Verbreitungsgebiet für ${a.name} gefunden.`);
   }
+
+  // Apply range points to total points for this round
+  points += rangePoints;
 
   // Buttons farblich bewerten
   // Habitat
@@ -532,15 +602,47 @@ async function submitGuess(){
   // Verbreitungsgebiet hervorheben
   try{
     if(lastRangeLayer){ map.removeLayer(lastRangeLayer); lastRangeLayer = null; }
+    if(lastDistanceLayer){ map.removeLayer(lastDistanceLayer); lastDistanceLayer = null; }
     if(rangePoly){
       const highlightStyle = { color:'#22c55e', weight:3, fillColor:'#22c55e', fillOpacity:0.15 };
       lastRangeLayer = L.geoJSON(rangePoly, { style: highlightStyle }).addTo(map);
       if(lastRangeLayer.bringToFront) lastRangeLayer.bringToFront();
+
+      // If click was outside, draw a line to nearest polygon point and show distance
+      if(!insideRange && nearestCoord){
+        const nearestLatLng = [nearestCoord[1], nearestCoord[0]];
+        const line = L.polyline([
+          [selectedLatLng.lat, selectedLatLng.lng],
+          nearestLatLng
+        ], { color: '#f59e0b', weight: 2, dashArray: '6,6' });
+
+        // small marker at nearest point
+        const nearestMarker = L.circleMarker(nearestLatLng, { radius:5, color:'#f59e0b', fillColor:'#f59e0b' });
+
+        lastDistanceLayer = L.layerGroup([line, nearestMarker]).addTo(map);
+
+        const distText = (rangeDistanceKm !== null && isFinite(rangeDistanceKm)) ? `${rangeDistanceKm.toFixed(1).replace('.',',')} km` : 'unbekannt';
+        let pointsText = '';
+        if(rangePoints){
+          pointsText = `: +${rangePoints} Punkte`;
+        } else if(rangeDistanceKm !== null && isFinite(rangeDistanceKm) && rangeDistanceKm > 1000){
+          pointsText = ': Keine Punkte';
+        }
+        if(marker){
+          marker.bindPopup(`<b>Entfernung zum Verbreitungsgebiet:</b> ${distText}${pointsText}`).openPopup();
+        }
+      } else if(insideRange){
+        if(marker) marker.bindPopup(`<b>Richtig!</b> In Verbreitungsgebiet (+${rangePoints} Punkte)`).openPopup();
+      }
     }
   }catch(e){ console.warn('Fehler beim Hervorheben des Verbreitungsgebiets:', e); }
 
   // Punkte anzeigen und Gesamtpunkte erhöhen
-  document.getElementById('resultBox').innerHTML = `<b>Punkte dieser Runde:</b> ${points}`;
+  let distInfo = '';
+  if(rangeDistanceKm !== null && isFinite(rangeDistanceKm) && !insideRange){
+    distInfo = `<br><b>Entfernung:</b> ${rangeDistanceKm.toFixed(1)} km`;
+  }
+  document.getElementById('resultBox').innerHTML = `<b>Punkte dieser Runde:</b> ${points}${distInfo}`;
   totalScore += points;
   updateTotalScore();
 
