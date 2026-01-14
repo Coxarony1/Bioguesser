@@ -9,245 +9,134 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
+    /* =========================================
+       MODERNE STARTSEITE (Schüler-Design)
+       ========================================= */
+    #startScreen {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at center, #064e3b 0%, #020617 70%, #000 100%);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; padding: 20px; font-family: 'Inter', sans-serif;
+    }
+
+    .start-inner {
+      width: 100%; max-width: 850px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 24px; padding: 50px 30px 30px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      text-align: center; position: relative;
+    }
+
+    /* Logo-Einbindung ohne störenden Rahmen */
+    .logo-badge {
+      position: absolute; top: -70px; left: 50%;
+      transform: translateX(-50%);
+      width: 140px; height: 140px;
+      background: white; /* Macht den weißen Hintergrund des JPEGs unsichtbar */
+      border-radius: 50%;
+      padding: 5px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(34,197,94,0.4);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border: 4px solid #22c55e;
+    }
+    .logo-badge img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+
+    .start-title {
+      font-size: clamp(2.5rem, 6vw, 3.8rem); font-weight: 900;
+      margin: 10px 0 5px; color: #22c55e; letter-spacing: 2px;
+      text-transform: uppercase; text-shadow: 0 0 20px rgba(34,197,94,0.3);
+    }
+    .start-subtitle { color: #94a3b8; font-size: 1.1rem; margin-bottom: 30px; }
+
+    /* Grid für die 7. Klässler Erklärung */
+    .start-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      text-align: left; margin-bottom: 30px;
+    }
+    .info-box {
+      background: rgba(30, 41, 59, 0.5); border-radius: 16px;
+      padding: 20px; border: 1px solid rgba(255,255,255,0.05);
+    }
+    .info-box h3 { color: #86efac; margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+    .info-box p, .info-box li { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; }
+    .info-box ul { padding-left: 18px; margin: 10px 0 0; }
+    .info-box b { color: #fff; }
+
+    #startGameBtn {
+      padding: 16px 45px; font-size: 1.3rem; border-radius: 999px;
+      background: #22c55e; color: #052e16; border: none;
+      cursor: pointer; font-weight: 800;
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+      transition: all 0.2s;
+    }
+    #startGameBtn:hover { transform: scale(1.05); background: #16a34a; }
+
+    .start-footer { font-size: 0.85rem; color: #64748b; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+
+    /* --- AB HIER: SPIEL-BEREICH (DEINE ORIGINALEN STYLES) --- */
     body{margin:0;font-family:Inter,Arial;background:#0c111b;color:#e8eef5}
     .app{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow-x:hidden}
     .app.collapsed{grid-template-columns:0 1fr}
     .sidebar{
-      padding:18px;
-      background:#111827;
-      position:relative;
-      box-sizing:border-box;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      justify-content:flex-start;
-      overflow:hidden; /* avoid scrollbars; content is responsive */
-      height:100vh;
+      padding:18px; background:#111827; position:relative; box-sizing:border-box;
+      display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start;
+      overflow:hidden; height:100vh;
     }
     .mapwrap{position:relative}
     #map{height:100%;width:100%}
-
     .btn{
       padding:clamp(6px,1.2vh,10px) clamp(8px,1.6vw,12px);
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
+      border:none; border-radius:6px; cursor:pointer;
       font-size:clamp(0.82rem,1.6vw,1rem);
     }
     .btn.primary{background:#22c55e;color:#062712}
-
     .img-wrap{width:100%;max-height:calc(100vh - 260px);overflow:hidden;border-radius:8px;margin-bottom:10px}
     #animalImg{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-
-    /* Responsive text & controls to avoid vertical/horizontal scrolling */
     #animalName{font-size:clamp(1.05rem,2.2vw,1.25rem);margin:8px 0 4px}
     #animalLatname{font-size:clamp(0.9rem,1.6vw,1rem);color:#9ca3af;margin:0 0 8px}
     #habitatButtons, #taxonButtons{display:flex;flex-wrap:wrap;gap:6px}
     #resultBox{font-size:clamp(0.9rem,1.6vw,1rem)}
-    #infoCard{font-size:clamp(0.85rem,1.5vw,0.98rem)}
-    label{font-size:clamp(0.92rem,1.8vw,1rem)}
-    #infoCard{background:#1e293b;border-radius:8px;padding:12px;margin-top:12px}
+    #infoCard{font-size:clamp(0.85rem,1.5vw,0.98rem); background:#1e293b;border-radius:8px;padding:12px;margin-top:12px}
     #infoCard h3{margin:0 0 8px 0}
     #infoCard p{margin:4px 0}
-
-    /* Auswahlzustände der Buttons */
-    .habitat-btn,
-    .taxon-btn{
-      background:#1e293b;
-      color:#e5e7eb;
-      margin-bottom:4px;
-    }
-    .habitat-btn.selected,
-    .taxon-btn.selected{
-      background:#38bdf8;
-      color:#0f172a;
-    }
-    .btn-correct{
-      background:#22c55e !important;
-      color:#052e16 !important;
-    }
-    .btn-wrong{
-      background:#ef4444 !important;
-      color:#fef2f2 !important;
-    }
-
-    /* Gesamtpunkte unten links in der Sidebar */
+    .habitat-btn, .taxon-btn{background:#1e293b; color:#e5e7eb; margin-bottom:4px;}
+    .habitat-btn.selected, .taxon-btn.selected{background:#38bdf8; color:#0f172a;}
+    .btn-correct{background:#22c55e !important; color:#052e16 !important;}
+    .btn-wrong{background:#ef4444 !important; color:#fef2f2 !important;}
     #totalScoreBox{
-      position:absolute;
-      top:12px;
-      right:18px;
-      font-size:1.425rem;
-      color:#e5e7eb;
-      padding:9px 15px;
-      background:#020617;
-      border-radius:999px;
-      border:2px solid #7f1d1d;
-      z-index:600;
-      box-shadow:0 6px 18px rgba(0,0,0,0.55);
+      position:absolute; top:12px; right:18px; font-size:1.425rem; color:#e5e7eb;
+      padding:9px 15px; background:#020617; border-radius:999px; border:2px solid #7f1d1d;
+      z-index:600; box-shadow:0 6px 18px rgba(0,0,0,0.55);
     }
-
-    /* Nächste-Runde-Button: zentral in der Karte, groß; zunächst unsichtbar */
     #nextBtn{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      padding:16px 32px;
-      font-size:1.2rem;
-      border-radius:999px;
-      background:#0ea5e9;
-      color:#0f172a;
-      border:none;
-      cursor:pointer;
-      font-weight:700;
-      box-shadow:0 12px 36px rgba(15,23,42,0.9);
-      z-index:500;
-      display:none;
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      padding:16px 32px; font-size:1.2rem; border-radius:999px;
+      background:#0ea5e9; color:#0f172a; border:none; cursor:pointer;
+      font-weight:700; box-shadow:0 12px 36px rgba(15,23,42,0.9);
+      z-index:500; display:none;
     }
-    #nextBtn:hover{
-      background:#0284c7;
-    }
-
-    /* Sidebar toggle button (border between sidebar and map) */
+    #nextBtn:hover{background:#0284c7;}
     #sidebarToggle{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      right:-20px; /* attach to right edge of sidebar (half of width) */
-      width:40px; /* doubled width */
-      height:52px;
-      border-radius:8px;
-      background:#1f2937;
-      color:#e5e7eb;
-      border:2px solid rgba(255,255,255,0.06);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      z-index:900;
-      box-shadow:0 6px 18px rgba(0,0,0,0.35);
-      font-size:16px;
-      padding:0;
+      position:absolute; top:50%; transform:translateY(-50%); right:-20px;
+      width:40px; height:52px; border-radius:8px; background:#1f2937; color:#e5e7eb;
+      border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center;
+      justify-content:center; cursor:pointer; z-index:900; box-shadow:0 6px 18px rgba(0,0,0,0.35);
+      font-size:16px; padding:0;
     }
     .app.collapsed #sidebarToggle{ left:0; right:auto; }
-    @media (max-width:800px){
-      /* On mobile keep toggle visible and reachable by fixing it to the viewport */
-      #sidebarToggle{
-        position:fixed !important;
-        top:12px !important;
-        left:8px !important;
-        right:auto !important;
-        width:40px !important;
-        height:40px !important;
-        border-radius:8px !important;
-        z-index:1100 !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-      }
-      /* When collapsed, keep it at same fixed position */
-      .app.collapsed #sidebarToggle{ left:8px !important; }
-    }
-    /* When the sidebar is visible, push the arrow to the far left of the toggle for visibility */
     .app:not(.collapsed) #sidebarToggle{ justify-content:flex-start; padding-left:6px; }
 
-    /* --------- STARTSEITE / LANDING PAGE --------- */
-    #startScreen{
-      position:fixed;
-      inset:0;
-      background:radial-gradient(circle at top, #064e3b 0, #020617 55%, #000 100%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      padding:20px;
-    }
-    .start-inner{
-      max-width:720px;
-      text-align:center;
-      background:rgba(15,23,42,0.9);
-      border-radius:18px;
-      padding:32px 26px 28px;
-      box-shadow:0 25px 60px rgba(0,0,0,0.6);
-      border:1px solid rgba(34,197,94,0.4);
-    }
-    .start-title{
-      font-size:3rem;
-      font-weight:800;
-      margin:0 0 16px;
-      color:#22c55e;
-      letter-spacing:0.08em;
-      text-transform:uppercase;
-    }
-    .start-subtitle{
-      font-size:1.15rem;
-      margin:0 0 18px;
-      color:#cbd5e1;
-      font-weight:500;
-    }
-    .start-text{
-      text-align:left;
-      line-height:1.5;
-      font-size:0.98rem;
-      color:#e5e7eb;
-      margin:0 auto 22px;
-      max-width:640px;
-    }
-    .start-text b{color:#bbf7d0;}
-    .start-points{
-      margin:14px auto 18px;
-      max-width:460px;
-      font-size:0.96rem;
-    }
-    .start-points ul{
-      padding-left:18px;
-      margin:6px 0 0;
-    }
-    .start-points li{
-      margin:3px 0;
-    }
-    .start-footer{
-      font-size:0.9rem;
-      color:#9ca3af;
-      margin-top:10px;
-    }
-    .start-names{
-      color:#e5e7eb;
-      font-weight:500;
-    }
-    #startGameBtn{
-      margin-top:6px;
-      padding:11px 26px;
-      font-size:1.05rem;
-      border-radius:999px;
-      background:#22c55e;
-      color:#052e16;
-      border:none;
-      cursor:pointer;
-      font-weight:700;
-      box-shadow:0 12px 35px rgba(34,197,94,0.35);
-      transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-    }
-    #startGameBtn:hover{
-      background:#16a34a;
-      transform:translateY(-1px);
-      box-shadow:0 16px 45px rgba(34,197,94,0.45);
-    }
-    #startGameBtn:active{
-      transform:translateY(0);
-      box-shadow:0 8px 24px rgba(34,197,94,0.3);
-    }
-
     @media (max-width:800px){
-      .start-inner{
-        padding:24px 20px 22px;
+      #sidebarToggle{
+        position:fixed !important; top:12px !important; left:8px !important; 
+        width:40px !important; height:40px !important; z-index:1100 !important;
       }
-      .start-title{
-        font-size:2.3rem;
-      }
-      .start-text{
-        font-size:0.95rem;
-      }
+      .start-grid { grid-template-columns: 1fr; }
+      .logo-badge { width: 110px; height: 110px; top: -55px; }
+      .start-inner { margin-top: 40px; }
     }
   </style>
 </head>
@@ -256,47 +145,44 @@
 <!-- STARTSEITE -->
 <div id="startScreen">
   <div class="start-inner">
+    
+    <div class="logo-badge">
+      <img src="bioguesser-logo.png" alt="BioGuesser Logo">
+    </div>
+
     <h1 class="start-title">BioGuesser</h1>
     <p class="start-subtitle">
-      Entdeckt Tiere, Lebensräume und ihre Verbreitung auf unserer Erde!
+      Werde zum Profi für Tiere und ihre Lebensräume!
     </p>
 
-    <p class="start-text">
-      Im Spiel <b>BioGuesser</b> geht es darum, die unterschiedlichsten Tierarten und
-      ihre Verbreitung auf der Welt kennenzulernen. Eure Aufgabe ist es außerdem,
-      die <b>Habitate</b> sowie eine sehr vereinfachte <b>taxonomische Einordnung</b>
-      der Tiere zuzuordnen.
-    </p>
+    <div class="start-grid">
+      <div class="info-box">
+        <h3>🔍 Deine Mission</h3>
+        <p>Ein Tier wird angezeigt. Kannst du folgende Fragen lösen?</p>
+        <ul>
+          <li><b>Wo</b> auf der Erde lebt dieses Tier? (Klick die Karte!)</li>
+          <li>In welchem <b>Habitat</b> ist es zu Hause?</li>
+          <li>Zu welcher <b>Tierklasse</b> gehört es?</li>
+        </ul>
+      </div>
 
-    <div class="start-points">
-      <p><b>So funktioniert’s:</b></p>
-      <ul>
-        <li>Links seht ihr ein Tier mit Bild und Namen.</li>
-        <li>Ihr klickt auf der Weltkarte dorthin, wo ihr glaubt, dass dieses Tier lebt.</li>
-        <li>Unter dem Tier wählt ihr das passende <b>Habitat</b> und die richtige <b>Taxonomie</b> aus.</li>
-      </ul>
+      <div class="info-box">
+        <h3>🏆 Belohnungen</h3>
+        <p>Sammle Punkte für jede richtige Antwort:</p>
+        <ul>
+          <li><b>Volltreffer Karte:</b> +1000 Pkt.</li>
+          <li><b>Nahe dran:</b> 50 - 500 Pkt.</li>
+          <li><b>Habitat & Klasse:</b> je +200 Pkt.</li>
+        </ul>
+        <p style="margin-top:10px; font-size:0.85rem; color:#86efac;"><i>Schaffst du den Highscore?</i></p>
+      </div>
     </div>
 
-    <div class="start-points">
-      <p><b>Punkte sammeln:</b></p>
-      <ul>
-        <li>Trefft ihr den Bereich des Lebensraums korrekt: <b>+1000 Punkte</b></li>
-        <li>Seid ihr bis 100km daneben: <b>+500 Punkte</b></li>
-        <li>Seid ihr bis 500km daneben: <b>+200 Punkte</b></li>
-        <li>Seid ihr bis 1000km daneben: <b>+50 Punkte</b></li>
-        <li>Richtige taxonomische Einordnung: <b>+200 Punkte</b></li>
-        <li>Richtige Habitat-Zuordnung: <b>+200 Punkte</b></li>
-      </ul>
-      <p style="margin-top:6px;">
-        Sammelt so viele Punkte wie möglich, um auf der Rangliste aufzusteigen!
-      </p>
-    </div>
-
-    <button id="startGameBtn">Starte das Spiel</button>
+    <button id="startGameBtn">JETZT STARTEN</button>
 
     <p class="start-footer">
-      Viel Spaß beim Spielen und Lernen wünschen euch<br>
-      <span class="start-names">Lilly, Henriette, Joscha, Joshi, Konrad und Luca</span>.
+      Viel Erfolg beim Lernen wünschen euch<br>
+      <span style="color:#e5e7eb; font-weight:600;">Lilly, Henriette, Joscha, Joshi, Konrad & Luca</span>
     </p>
   </div>
 </div>
@@ -494,8 +380,8 @@ function selectTaxon(t){
   if(btn) btn.classList.add('selected');
 }
 
-// Habitat Buttons
-const habitatList = ['Savanne','Wüste','Wald','Tundra','Grasland','Ozean','Feuchtgebiet'];
+// Habitat Buttons – 9 einwortige Habitate
+const habitatList = ['Savanne','Regenwald','Buschland','Wüste','Gebirge','Tundra','Polar','Wald','Wasser'];
 const habEl = document.getElementById('habitatButtons');
 habitatList.forEach(h=>{
   const b = document.createElement('button');
