@@ -5,78 +5,130 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Bioguesser – Habitat & Verbreitungsgebiete</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     /* =========================================
-       MODERNE STARTSEITE (Schüler-Design)
+       MODERNE STARTSEITE (Design-Upgrade)
        ========================================= */
+    
+    /* Animation für das Logo */
+    @keyframes floatLogo {
+      0% { transform: translate(-50%, 0px); }
+      50% { transform: translate(-50%, -15px); }
+      100% { transform: translate(-50%, 0px); }
+    }
+
+    /* Animation für den Hintergrund */
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
     #startScreen {
       position: fixed; inset: 0;
-      background: radial-gradient(circle at center, #064e3b 0%, #020617 70%, #000 100%);
+      /* Etwas lebendigerer Hintergrund */
+      background: radial-gradient(circle at center, #065f46 0%, #0f172a 60%, #020617 100%);
       display: flex; align-items: center; justify-content: center;
       z-index: 9999; padding: 20px; font-family: 'Inter', sans-serif;
     }
 
     .start-inner {
       width: 100%; max-width: 850px;
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 24px; padding: 50px 30px 30px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      /* Glassmorphismus Effekt */
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 30px; 
+      /* Mehr Platz oben für das große Logo */
+      padding: 110px 40px 40px; 
+      box-shadow: 0 25px 80px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.1);
       text-align: center; position: relative;
     }
 
-    /* Logo-Einbindung ohne störenden Rahmen */
+    /* Logo-Einbindung: GRÖSSER & BESSER */
     .logo-badge {
-      position: absolute; top: -70px; left: 50%;
-      transform: translateX(-50%);
-      width: 140px; height: 140px;
-      background: white; /* Macht den weißen Hintergrund des JPEGs unsichtbar */
+      position: absolute; 
+      /* Weiter nach oben geschoben */
+      top: -100px; 
+      left: 50%;
+      /* Keine Transform hier, da die Animation das übernimmt (siehe @keyframes floatLogo) */
+      width: 200px; height: 200px; /* Deutlich größer */
+      background: white; 
       border-radius: 50%;
-      padding: 5px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(34,197,94,0.4);
+      padding: 8px;
+      /* Starker Glow-Effekt */
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(34,197,94,0.6);
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden; border: 4px solid #22c55e;
+      overflow: hidden; border: 6px solid #22c55e;
+      animation: floatLogo 6s ease-in-out infinite; /* Schwebe-Effekt */
     }
     .logo-badge img {
       width: 100%; height: 100%; object-fit: contain;
+      /* Falls das Logo Ecken hat, hilft ein leichter Radius */
+      border-radius: 50%; 
     }
 
     .start-title {
-      font-size: clamp(2.5rem, 6vw, 3.8rem); font-weight: 900;
-      margin: 10px 0 5px; color: #22c55e; letter-spacing: 2px;
-      text-transform: uppercase; text-shadow: 0 0 20px rgba(34,197,94,0.3);
+      font-size: clamp(3rem, 7vw, 4.5rem); /* Riesige Schrift */
+      font-weight: 900;
+      margin: 0 0 10px; 
+      /* Text Farbverlauf */
+      background: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+      text-transform: uppercase; 
+      filter: drop-shadow(0 0 15px rgba(34,197,94,0.4));
     }
-    .start-subtitle { color: #94a3b8; font-size: 1.1rem; margin-bottom: 30px; }
+    
+    .start-subtitle { 
+      color: #cbd5e1; font-size: 1.25rem; margin-bottom: 40px; font-weight: 300;
+      max-width: 600px; margin-left: auto; margin-right: auto;
+    }
 
-    /* Grid für die 7. Klässler Erklärung */
+    /* Grid für die Info-Boxen */
     .start-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-      text-align: left; margin-bottom: 30px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 25px;
+      text-align: left; margin-bottom: 40px;
     }
     .info-box {
-      background: rgba(30, 41, 59, 0.5); border-radius: 16px;
-      padding: 20px; border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(30, 41, 59, 0.6); border-radius: 20px;
+      padding: 25px; border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.3s ease, background 0.3s;
     }
-    .info-box h3 { color: #86efac; margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-    .info-box p, .info-box li { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; }
-    .info-box ul { padding-left: 18px; margin: 10px 0 0; }
-    .info-box b { color: #fff; }
+    .info-box:hover {
+      transform: translateY(-5px);
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+    .info-box h3 { color: #86efac; margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; }
+    .info-box p, .info-box li { color: #cbd5e1; font-size: 1rem; line-height: 1.6; }
+    .info-box ul { padding-left: 20px; margin: 15px 0 0; }
+    .info-box b { color: #fff; font-weight: 700; }
 
     #startGameBtn {
-      padding: 16px 45px; font-size: 1.3rem; border-radius: 999px;
-      background: #22c55e; color: #052e16; border: none;
-      cursor: pointer; font-weight: 800;
-      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
-      transition: all 0.2s;
+      padding: 20px 60px; font-size: 1.5rem; border-radius: 999px;
+      background: linear-gradient(to right, #22c55e, #16a34a);
+      color: #022c22; border: none;
+      cursor: pointer; font-weight: 800; letter-spacing: 1px;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+      transition: all 0.3s;
+      animation: pulseGlow 2s infinite;
     }
-    #startGameBtn:hover { transform: scale(1.05); background: #16a34a; }
+    #startGameBtn:hover { 
+      transform: scale(1.05) translateY(-2px); 
+      background: linear-gradient(to right, #4ade80, #22c55e);
+      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.7);
+    }
 
-    .start-footer { font-size: 0.85rem; color: #64748b; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+    .start-footer { 
+      font-size: 0.9rem; color: #64748b; margin-top: 35px; 
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; 
+    }
 
-    /* --- AB HIER: SPIEL-BEREICH (DEINE ORIGINALEN STYLES) --- */
+    /* --- AB HIER: SPIEL-BEREICH (ORIGINAL STYLES - UNVERÄNDERT) --- */
     body{margin:0;font-family:Inter,Arial;background:#0c111b;color:#e8eef5}
     .app{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow-x:hidden}
     .app.collapsed{grid-template-columns:0 1fr}
@@ -135,14 +187,15 @@
         width:40px !important; height:40px !important; z-index:1100 !important;
       }
       .start-grid { grid-template-columns: 1fr; }
-      .logo-badge { width: 110px; height: 110px; top: -55px; }
-      .start-inner { margin-top: 40px; }
+      /* Angepasstes Logo für Mobile */
+      .logo-badge { width: 140px; height: 140px; top: -70px; }
+      .start-inner { margin-top: 60px; padding-top: 80px; }
+      .start-title { font-size: 2.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- STARTSEITE -->
 <div id="startScreen">
   <div class="start-inner">
     
@@ -174,7 +227,7 @@
           <li><b>Nahe dran:</b> 50 - 500 Pkt.</li>
           <li><b>Habitat & Klasse:</b> je +200 Pkt.</li>
         </ul>
-        <p style="margin-top:10px; font-size:0.85rem; color:#86efac;"><i>Schaffst du den Highscore?</i></p>
+        <p style="margin-top:10px; font-size:0.9rem; color:#86efac; font-weight:bold;"><i>Schaffst du den Highscore?</i></p>
       </div>
     </div>
 
@@ -189,7 +242,6 @@
 
 <div class="app">
 
-  <!-- Sidebar -->
   <div class="sidebar">
 
     <div class="img-wrap">
@@ -219,7 +271,6 @@
     <button id="sidebarToggle" title="Verstecken/Anzeigen">◀</button>
   </div>
 
-  <!-- Map -->
   <div class="mapwrap">
     <button id="nextBtn" class="btn">Nächste Runde</button>
     <div id="map"></div>
@@ -228,7 +279,6 @@
 
 </div>
 
-<!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 <script>
@@ -247,7 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
     startBtn.addEventListener('click', () => {
       const startScreen = document.getElementById('startScreen');
       if(startScreen){
-        startScreen.style.display = 'none';
+        // Optional fade out
+        startScreen.style.opacity = '0';
+        startScreen.style.transition = 'opacity 0.5s';
+        setTimeout(() => {
+            startScreen.style.display = 'none';
+        }, 500);
       }
       // New game: reset shown cards and pick first random animal
       shownIndices.clear();
