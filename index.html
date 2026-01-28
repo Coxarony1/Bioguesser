@@ -2,236 +2,244 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Bioguesser – Habitat & Verbreitungsgebiete</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     /* =========================================
-       MODERNE STARTSEITE (Design-Upgrade)
+       CSS VARIABLEN & GRUNDLAGEN
        ========================================= */
-    
-    /* Animation für das Logo */
+    :root {
+      --primary: #22c55e;
+      --primary-dark: #15803d;
+      --bg-dark: #0f172a;
+      --panel-bg: #1e293b;
+      --text-main: #e8eef5;
+      --sidebar-width: clamp(300px, 25vw, 400px);
+    }
+
+    body { margin: 0; font-family: 'Inter', Arial, sans-serif; background: #0c111b; color: var(--text-main); height: 100vh; overflow: hidden; }
+
+    /* =========================================
+       ANIMATIONEN
+       ========================================= */
     @keyframes floatLogo {
       0% { transform: translate(-50%, 0px); }
       50% { transform: translate(-50%, -15px); }
       100% { transform: translate(-50%, 0px); }
     }
 
-    /* Animation für den Hintergrund */
     @keyframes pulseGlow {
       0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
       70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
       100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
 
-    #startScreen {
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    /* =========================================
+       SCREENS (START, TUTORIAL, ENDE)
+       ========================================= */
+    .overlay-screen {
       position: fixed; inset: 0;
-      /* Etwas lebendigerer Hintergrund */
       background: radial-gradient(circle at center, #065f46 0%, #0f172a 60%, #020617 100%);
       display: flex; align-items: center; justify-content: center;
-      z-index: 9999; padding: 20px; font-family: 'Inter', sans-serif;
+      z-index: 9999; padding: 20px;
+      overflow-y: auto; /* Wichtig für kleine Screens */
     }
 
     .start-inner {
       width: 100%; max-width: 850px;
-      /* Glassmorphismus Effekt */
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-radius: 30px; 
-      /* Mehr Platz oben für das große Logo */
-      padding: 110px 40px 40px; 
+      padding: 40px; 
       box-shadow: 0 25px 80px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.1);
       text-align: center; position: relative;
-    }
-
-    /* Logo-Einbindung: GRÖSSER & BESSER */
-    .logo-badge {
-      position: absolute; 
-      /* Weiter nach oben geschoben */
-      top: -100px; 
-      left: 50%;
-      /* Keine Transform hier, da die Animation das übernimmt (siehe @keyframes floatLogo) */
-      width: 200px; height: 200px; /* Deutlich größer */
-      background: white; 
-      border-radius: 50%;
-      padding: 8px;
-      /* Starker Glow-Effekt */
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(34,197,94,0.6);
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; border: 6px solid #22c55e;
-      animation: floatLogo 6s ease-in-out infinite; /* Schwebe-Effekt */
-    }
-    .logo-badge img {
-      width: 100%; height: 100%; object-fit: contain;
-      /* Falls das Logo Ecken hat, hilft ein leichter Radius */
-      border-radius: 50%; 
-    }
-
-    .start-title {
-      font-size: clamp(3rem, 7vw, 4.5rem); /* Riesige Schrift */
-      font-weight: 900;
-      margin: 0 0 10px; 
-      /* Text Farbverlauf */
-      background: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -1px;
-      text-transform: uppercase; 
-      filter: drop-shadow(0 0 15px rgba(34,197,94,0.4));
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      animation: fadeIn 0.4s ease-out;
+      margin: auto;
     }
     
-    .start-subtitle { 
-      color: #cbd5e1; font-size: 1.25rem; margin-bottom: 40px; font-weight: 300;
-      max-width: 600px; margin-left: auto; margin-right: auto;
+    /* Speziell für den ersten Screen mit dem Logo oben drauf */
+    .screen-with-logo {
+        margin-top: 80px;
+        padding-top: 120px;
     }
 
-    /* Grid für die Info-Boxen */
+    /* Logo Styles */
+    .logo-badge {
+      position: absolute; top: -110px; left: 50%;
+      width: 220px; height: 220px;
+      background: #fff; border-radius: 50%; padding: 5px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(34,197,94,0.4);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border: 6px solid var(--primary);
+      animation: floatLogo 6s ease-in-out infinite; 
+    }
+    .logo-badge img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+
+    /* Typografie */
+    .start-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; margin: 0 0 10px; 
+      background: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -1px; text-transform: uppercase; 
+      filter: drop-shadow(0 0 15px rgba(34,197,94,0.3));
+    }
+    .start-subtitle { color: #cbd5e1; font-size: 1.2rem; margin-bottom: 30px; font-weight: 300; }
+
+    /* Input Feld für Name */
+    .name-input-wrapper { margin: 30px 0; }
+    #playerNameInput {
+      background: rgba(0,0,0,0.3); border: 2px solid #475569;
+      color: white; padding: 15px 25px; font-size: 1.2rem;
+      border-radius: 12px; width: 100%; max-width: 300px;
+      text-align: center; transition: all 0.3s;
+      outline: none;
+    }
+    #playerNameInput:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(34,197,94,0.2); }
+    #playerNameInput::placeholder { color: #64748b; }
+
+    /* Grid für die Anleitung (Tutorial Screen) */
     .start-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 25px;
-      text-align: left; margin-bottom: 40px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 20px; text-align: left; margin-bottom: 30px; margin-top: 20px;
     }
     .info-box {
-      background: rgba(30, 41, 59, 0.6); border-radius: 20px;
-      padding: 25px; border: 1px solid rgba(255,255,255,0.08);
-      transition: transform 0.3s ease, background 0.3s;
+      background: rgba(30, 41, 59, 0.6); border-radius: 16px; padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.2s;
     }
-    .info-box:hover {
-      transform: translateY(-5px);
-      background: rgba(30, 41, 59, 0.9);
-      border-color: rgba(34, 197, 94, 0.5);
-    }
-    .info-box h3 { color: #86efac; margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; }
-    .info-box p, .info-box li { color: #cbd5e1; font-size: 1rem; line-height: 1.6; }
-    .info-box ul { padding-left: 20px; margin: 15px 0 0; }
-    .info-box b { color: #fff; font-weight: 700; }
+    .info-box:hover { transform: translateY(-3px); border-color: var(--primary); }
+    .info-box h3 { color: #86efac; margin: 0 0 10px 0; font-size: 1.2rem; display:flex; align-items:center; gap:8px; }
+    .info-box ul { padding-left: 20px; margin: 10px 0 0; color: #cbd5e1; }
+    .info-box li { margin-bottom: 5px; font-size: 0.95rem; }
+    .info-box b { color: #fff; }
 
-    #startGameBtn {
-      padding: 20px 60px; font-size: 1.5rem; border-radius: 999px;
-      background: linear-gradient(to right, #22c55e, #16a34a);
-      color: #022c22; border: none;
-      cursor: pointer; font-weight: 800; letter-spacing: 1px;
-      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
-      transition: all 0.3s;
-      animation: pulseGlow 2s infinite;
+    /* Buttons */
+    .action-btn {
+      padding: 18px 50px; font-size: 1.4rem; border-radius: 999px;
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: #022c22; border: none; cursor: pointer; font-weight: 800;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+      transition: transform 0.2s; animation: pulseGlow 2s infinite;
+      margin-top: 10px;
     }
-    #startGameBtn:hover { 
-      transform: scale(1.05) translateY(-2px); 
-      background: linear-gradient(to right, #4ade80, #22c55e);
-      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.7);
+    .action-btn:hover { transform: scale(1.05); }
+    .action-btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none; transform: none; filter: grayscale(1); }
+
+    .start-footer { font-size: 0.8rem; color: #64748b; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+
+    /* Game Over Screen Spezifisch */
+    .score-display { font-size: 3rem; color: #fbbf24; font-weight: bold; margin: 20px 0; text-shadow: 0 0 30px rgba(251, 191, 36, 0.4); }
+    .rank-list { text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; margin: 20px auto; max-width: 400px; }
+    .rank-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .rank-item:last-child { border-bottom: none; }
+    .rank-item b { color: var(--primary); }
+
+    /* =========================================
+       APP LAYOUT (RESPONSIVE)
+       ========================================= */
+    .app { display: grid; grid-template-columns: var(--sidebar-width) 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+    .app.collapsed { grid-template-columns: 0 1fr; }
+
+    .sidebar {
+      background: #111827; position: relative; display: flex; flex-direction: column; 
+      height: 100vh; padding: 15px; box-sizing: border-box; overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;
     }
 
-    .start-footer { 
-      font-size: 0.9rem; color: #64748b; margin-top: 35px; 
-      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; 
+    .img-wrap {
+      width: 100%; flex: 0 1 auto; min-height: 150px; max-height: 35vh;
+      overflow: hidden; border-radius: 12px; margin-bottom: 15px;
+      background: #000; display: flex; align-items: center; justify-content: center;
+    }
+    #animalImg { width: 100%; height: 100%; object-fit: cover; }
+
+    #animalName { margin: 0; font-size: 1.5rem; line-height: 1.2; color: #fff; }
+    #animalLatname { display: block; margin-bottom: 15px; color: #94a3b8; font-style: italic; font-size: 0.95rem; }
+
+    .selection-area { flex: 1 0 auto; }
+    label { display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 5px; font-weight: 700; }
+    #habitatButtons, #taxonButtons { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+
+    .btn { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-family: inherit; transition: all 0.2s; }
+    .habitat-btn, .taxon-btn { background: #1f2937; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.05); }
+    .habitat-btn:hover, .taxon-btn:hover { background: #374151; }
+    .habitat-btn.selected, .taxon-btn.selected { background: #38bdf8; color: #0f172a; font-weight: bold; border-color: #38bdf8; }
+    .btn-correct { background: #22c55e !important; color: #022c22 !important; border-color: #22c55e !important; }
+    .btn-wrong { background: #ef4444 !important; color: #fff !important; opacity: 0.6; }
+
+    .btn.primary { width: 100%; padding: 12px; background: var(--primary); color: #022c22; font-weight: bold; font-size: 1rem; margin-top: 5px; }
+    .btn.primary:hover { background: var(--primary-dark); color: white; }
+
+    #resultBox { font-size: 1rem; min-height: 24px; color: #e2e8f0; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+    #infoCard { margin-top: 10px; background: #334155; padding: 15px; border-radius: 8px; font-size: 0.9rem; border-left: 4px solid #38bdf8; }
+    #infoCard h3 { margin-top: 0; color: #fff; }
+
+    .mapwrap { position: relative; width: 100%; height: 100%; overflow: hidden; }
+    #map { height: 100%; width: 100%; background: #0c111b; }
+
+    #totalScoreBox {
+      position: absolute; top: 20px; right: 20px; 
+      background: rgba(15, 23, 42, 0.9); border: 2px solid #7f1d1d; 
+      color: #fff; padding: 10px 20px; border-radius: 99px; font-weight: bold;
+      z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); font-size: 1.1rem;
     }
 
-    /* --- AB HIER: SPIEL-BEREICH (ORIGINAL STYLES - UNVERÄNDERT) --- */
-    body{margin:0;font-family:Inter,Arial;background:#0c111b;color:#e8eef5}
-    .app{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow-x:hidden}
-    .app.collapsed{grid-template-columns:0 1fr}
-    .sidebar{
-      padding:18px; background:#111827; position:relative; box-sizing:border-box;
-      display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start;
-      overflow:hidden; height:100vh;
+    #nextBtn {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #0ea5e9; color: #fff; padding: 15px 40px; font-size: 1.2rem;
+      border-radius: 99px; border: none; font-weight: bold; cursor: pointer;
+      z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none;
     }
-    .mapwrap{position:relative}
-    #map{height:100%;width:100%}
-    .btn{
-      padding:clamp(6px,1.2vh,10px) clamp(8px,1.6vw,12px);
-      border:none; border-radius:6px; cursor:pointer;
-      font-size:clamp(0.82rem,1.6vw,1rem);
-    }
-    .btn.primary{background:#22c55e;color:#062712}
-    .img-wrap{width:100%;max-height:calc(100vh - 260px);overflow:hidden;border-radius:8px;margin-bottom:10px}
-    #animalImg{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-    #animalName{font-size:clamp(1.05rem,2.2vw,1.25rem);margin:8px 0 4px}
-    #animalLatname{font-size:clamp(0.9rem,1.6vw,1rem);color:#9ca3af;margin:0 0 8px}
-    #habitatButtons, #taxonButtons{display:flex;flex-wrap:wrap;gap:6px}
-    #resultBox{font-size:clamp(0.9rem,1.6vw,1rem)}
-    #infoCard{font-size:clamp(0.85rem,1.5vw,0.98rem); background:#1e293b;border-radius:8px;padding:12px;margin-top:12px}
-    #infoCard h3{margin:0 0 8px 0}
-    #infoCard p{margin:4px 0}
-    .habitat-btn, .taxon-btn{background:#1e293b; color:#e5e7eb; margin-bottom:4px;}
-    .habitat-btn.selected, .taxon-btn.selected{background:#38bdf8; color:#0f172a;}
-    .btn-correct{background:#22c55e !important; color:#052e16 !important;}
-    .btn-wrong{background:#ef4444 !important; color:#fef2f2 !important;}
-    #totalScoreBox{
-      position:absolute; top:12px; right:18px; font-size:1.425rem; color:#e5e7eb;
-      padding:9px 15px; background:#020617; border-radius:999px; border:2px solid #7f1d1d;
-      z-index:600; box-shadow:0 6px 18px rgba(0,0,0,0.55);
-    }
-    #nextBtn{
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      padding:16px 32px; font-size:1.2rem; border-radius:999px;
-      background:#0ea5e9; color:#0f172a; border:none; cursor:pointer;
-      font-weight:700; box-shadow:0 12px 36px rgba(15,23,42,0.9);
-      z-index:500; display:none;
-    }
-    #nextBtn:hover{background:#0284c7;}
-    #sidebarToggle{
-      position:absolute; top:50%; transform:translateY(-50%); right:-20px;
-      width:40px; height:52px; border-radius:8px; background:#1f2937; color:#e5e7eb;
-      border:2px solid rgba(255,255,255,0.06); display:flex; align-items:center;
-      justify-content:center; cursor:pointer; z-index:900; box-shadow:0 6px 18px rgba(0,0,0,0.35);
-      font-size:16px; padding:0;
-    }
-    .app.collapsed #sidebarToggle{ left:0; right:auto; }
-    .app:not(.collapsed) #sidebarToggle{ justify-content:flex-start; padding-left:6px; }
+    #nextBtn:hover { background: #0284c7; transform: translateX(-50%) scale(1.05); }
 
-    @media (max-width:800px){
-      #sidebarToggle{
-        position:fixed !important; top:12px !important; left:8px !important; 
-        width:40px !important; height:40px !important; z-index:1100 !important;
-      }
-      .start-grid { grid-template-columns: 1fr; }
-      /* Angepasstes Logo für Mobile */
-      .logo-badge { width: 140px; height: 140px; top: -70px; }
-      .start-inner { margin-top: 60px; padding-top: 80px; }
-      .start-title { font-size: 2.5rem; }
+    #sidebarToggle {
+      position: absolute; top: 50%; left: 0; transform: translateY(-50%);
+      width: 24px; height: 60px; background: #111827; color: #fff;
+      border: 1px solid rgba(255,255,255,0.1); border-left: none;
+      border-radius: 0 8px 8px 0; cursor: pointer; z-index: 2000;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+    .app.collapsed #sidebarToggle { left: 0; }
+    .app:not(.collapsed) #sidebarToggle { left: var(--sidebar-width); }
+
+    @media (max-width: 850px) {
+      .app { display: block; }
+      .sidebar { position: absolute; top: 0; left: 0; bottom: 0; width: 85%; max-width: 350px; z-index: 3000; transform: translateX(0); box-shadow: 5px 0 20px rgba(0,0,0,0.5); }
+      .app.collapsed .sidebar { transform: translateX(-100%); }
+      .app:not(.collapsed) #sidebarToggle { left: 85%; }
+      #sidebarToggle { left: 0; z-index: 3001; }
+      .mapwrap { height: 100vh; width: 100vw; }
+      /* Logo/Start Anpassungen Mobile */
+      .screen-with-logo { margin-top: 80px; padding-top: 100px; }
+      .start-inner { width: 90%; }
+      .logo-badge { width: 160px; height: 160px; top: -80px; }
+      .start-title { font-size: 2.8rem; }
     }
   </style>
 </head>
 <body>
 
-<div id="startScreen">
-  <div class="start-inner">
-    
+<div id="startScreen" class="overlay-screen">
+  <div class="start-inner screen-with-logo">
     <div class="logo-badge">
       <img src="bioguesser-logo.png" alt="BioGuesser Logo">
     </div>
 
     <h1 class="start-title">BioGuesser</h1>
-    <p class="start-subtitle">
-      Werde zum Profi für Tiere und ihre Lebensräume!
-    </p>
+    <p class="start-subtitle">Bist du bereit, die Tierwelt zu erforschen?</p>
 
-    <div class="start-grid">
-      <div class="info-box">
-        <h3>🔍 Deine Mission</h3>
-        <p>Ein Tier wird angezeigt. Kannst du folgende Fragen lösen?</p>
-        <ul>
-          <li><b>Wo</b> auf der Erde lebt dieses Tier? (Klick die Karte!)</li>
-          <li>In welchem <b>Habitat</b> ist es zu Hause?</li>
-          <li>Zu welcher <b>Tierklasse</b> gehört es?</li>
-        </ul>
-      </div>
-
-      <div class="info-box">
-        <h3>🏆 Belohnungen</h3>
-        <p>Sammle Punkte für jede richtige Antwort:</p>
-        <ul>
-          <li><b>Volltreffer Karte:</b> +1000 Pkt.</li>
-          <li><b>Nahe dran:</b> 50 - 500 Pkt.</li>
-          <li><b>Habitat & Klasse:</b> je +200 Pkt.</li>
-        </ul>
-        <p style="margin-top:10px; font-size:0.9rem; color:#86efac; font-weight:bold;"><i>Schaffst du den Highscore?</i></p>
-      </div>
+    <div class="name-input-wrapper">
+      <input type="text" id="playerNameInput" placeholder="Wie heißt du?" maxlength="15" autocomplete="off">
     </div>
 
-    <button id="startGameBtn">JETZT STARTEN</button>
+    <button id="toTutorialBtn" class="action-btn" disabled>WEITER ➔</button>
 
     <p class="start-footer">
       Viel Erfolg beim Lernen wünschen euch<br>
@@ -240,142 +248,188 @@
   </div>
 </div>
 
-<div class="app">
+<div id="tutorialScreen" class="overlay-screen" style="display:none;">
+  <div class="start-inner">
+    <h2 class="start-title" style="font-size: 2.5rem; margin-bottom: 20px;">So wird gespielt</h2>
+    
+    <div class="start-grid">
+      <div class="info-box">
+        <h3>🔍 Deine Mission</h3>
+        <p>Ein Tier wird angezeigt. Kannst du diese Fragen lösen?</p>
+        <ul>
+          <li><b>Wo</b> lebt es? (Klick die Karte!)</li>
+          <li>In welchem <b>Habitat</b> ist es zu Hause?</li>
+          <li>Zu welcher <b>Tierklasse</b> gehört es?</li>
+        </ul>
+      </div>
 
-  <div class="sidebar">
-
-    <div class="img-wrap">
-      <img id="animalImg" src="" alt="Tier">
+      <div class="info-box">
+        <h3>🏆 Punkte sammeln</h3>
+        <p>Sammle Highscore-Punkte für richtige Antworten:</p>
+        <ul>
+          <li><b>Karte (Volltreffer):</b> +1000 Pkt.</li>
+          <li><b>Karte (Nahe dran):</b> 50 - 500 Pkt.</li>
+          <li><b>Habitat & Klasse:</b> je +200 Pkt.</li>
+        </ul>
+      </div>
     </div>
 
+    <p style="margin-bottom: 25px; color:#94a3b8;">
+      Hallo <span id="tutorialPlayerName" style="color:#22c55e; font-weight:bold;">Spieler</span>! 
+      Es werden nacheinander alle Tiere abgefragt. <br>Am Ende siehst du deine Gesamtpunktzahl.
+    </p>
+
+    <button id="startGameBtn" class="action-btn">LOS GEHT'S 🚀</button>
+  </div>
+</div>
+
+<div id="gameOverScreen" class="overlay-screen" style="display:none;">
+  <div class="start-inner">
+    <h1 class="start-title" style="font-size: 3rem;">Ergebnis</h1>
+    <p class="start-subtitle">Alle Tiere erforscht! Tolle Leistung, <span id="finalNameDisplay" style="color:#fff; font-weight:bold;"></span>!</p>
+
+    <div class="score-display">
+      <span id="finalScoreDisplay">0</span> Pkt
+    </div>
+
+    <div class="rank-list">
+      <h4 style="margin:0 0 10px; color:#94a3b8; text-transform:uppercase; font-size:0.8rem;">Lokale Rangliste (Dieser PC)</h4>
+      <div id="highscoresList"></div>
+    </div>
+
+    <button onclick="location.reload()" class="action-btn" style="font-size:1rem; padding: 15px 30px;">NEUSTART</button>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="img-wrap"><img id="animalImg" src="" alt="Tier"></div>
     <h2 id="animalName"></h2>
     <p><i id="animalLatname"></i></p>
 
-    <div>
-      <label>Wähle Habitat:</label>
-      <div id="habitatButtons"></div>
+    <div class="selection-area">
+      <div><label>Habitat:</label><div id="habitatButtons"></div></div>
+      <div style="margin-top:15px;"><label>Klasse:</label><div id="taxonButtons"></div></div>
+      <div style="margin-top:20px;"><button id="submitBtn" class="btn primary">RATEN</button></div>
+      <div id="resultBox"></div>
+      <div id="infoCard" style="display:none"></div>
     </div>
-
-    <div style="margin-top:10px;">
-      <label>Wähle taxonomische Einordnung:</label>
-      <div id="taxonButtons"></div>
-    </div>
-
-    <div style="margin-top:10px;">
-      <button id="submitBtn" class="btn primary">Raten</button>
-    </div>
-
-    <div id="resultBox" style="margin-top:12px"></div>
-
-    <div id="infoCard" style="display:none"></div>
-    <button id="sidebarToggle" title="Verstecken/Anzeigen">◀</button>
   </div>
+  
+  <button id="sidebarToggle" title="Menü">◀</button>
 
   <div class="mapwrap">
-    <button id="nextBtn" class="btn">Nächste Runde</button>
+    <button id="nextBtn">Nächste Runde ➔</button>
     <div id="map"></div>
-    <div id="totalScoreBox">Gesamtpunkte: 0</div>
+    <div id="totalScoreBox">Punkte: 0</div>
   </div>
-
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 <script>
 // ==========================
-// MAP
+// MAP INITIALISIERUNG
 // ==========================
-const map = L.map('map').setView([20,0], 2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const map = L.map('map', { zoomControl: false }).setView([20,0], 2);
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
 // ==========================
-// STARTSEITE: Overlay ausblenden + Karte neu berechnen
+// STATUS & DATEN
 // ==========================
-document.addEventListener('DOMContentLoaded', () => {
-  const startBtn = document.getElementById('startGameBtn');
-  if(startBtn){
-    startBtn.addEventListener('click', () => {
-      const startScreen = document.getElementById('startScreen');
-      if(startScreen){
-        // Optional fade out
-        startScreen.style.opacity = '0';
-        startScreen.style.transition = 'opacity 0.5s';
-        setTimeout(() => {
-            startScreen.style.display = 'none';
-        }, 500);
-      }
-      // New game: reset shown cards and pick first random animal
-      shownIndices.clear();
-      currentIndex = pickRandomIndex();
-      setTimeout(() => {
-        map.invalidateSize();
-        map.setView([20, 0], 2);
-        loadRound();
-      }, 100);
-    });
-  }
-});
-
-// ==========================
-// HABITAT & VERBREITUNGSPOLYGONE
-// ==========================
+let playerName = "Spieler";
 const HABITAT_POLYGONS = {};
 const RANGE_POLYGONS = {};
-
-// ==========================
-// TIERE & Infodateien
-// ==========================
 let ANIMALS = [];
-
-async function loadAnimalsFromJSON(){
-  try{
-    const res = await fetch('animals/Tierinfos.json');
-    const data = await res.json();
-    ANIMALS = Object.values(data);
-
-    ANIMALS.forEach(a => {
-      if(a && a.name && a.distribution){
-        RANGE_POLYGONS[a.name] = a.distribution;
-      }
-    });
-  }catch(e){
-    console.error('Fehler beim Laden der Tierinformationen:', e);
-  }
-}
-
-let round = 0;
+let totalScore = 0;
+let shownIndices = new Set();
+let currentIndex = null;
 let selectedHabitat = null;
 let selectedTaxon = null;
 let selectedLatLng = null;
 let marker = null;
 let lastRangeLayer = null;
 let lastDistanceLayer = null;
-let totalScore = 0;
-let shownIndices = new Set();
-let currentIndex = null;
 
 // ==========================
-// Punkte-Anzeige
+// NAVIGATION (START -> TUTORIAL -> GAME)
 // ==========================
+const nameInput = document.getElementById('playerNameInput');
+const toTutorialBtn = document.getElementById('toTutorialBtn');
+const startGameBtn = document.getElementById('startGameBtn');
+const startScreen = document.getElementById('startScreen');
+const tutorialScreen = document.getElementById('tutorialScreen');
+
+// 1. Name eingeben -> Button aktivieren
+nameInput.addEventListener('input', () => {
+  toTutorialBtn.disabled = (nameInput.value.trim().length === 0);
+});
+
+// 2. Klick auf "Weiter" -> Zeige Tutorial
+toTutorialBtn.addEventListener('click', () => {
+  playerName = nameInput.value.trim() || "Forscher";
+  // Name in Tutorial einsetzen
+  document.getElementById('tutorialPlayerName').textContent = playerName;
+  
+  // Überblenden
+  startScreen.style.opacity = '0';
+  startScreen.style.transition = 'opacity 0.4s';
+  setTimeout(() => {
+      startScreen.style.display = 'none';
+      tutorialScreen.style.display = 'flex';
+      // Kleiner Animationseffekt fürs Tutorial
+      tutorialScreen.style.opacity = '0';
+      setTimeout(()=> { 
+          tutorialScreen.style.opacity = '1'; 
+          tutorialScreen.style.transition = 'opacity 0.4s';
+      }, 50);
+  }, 400);
+});
+
+// 3. Klick auf "Los Geht's" -> Starte Spiel
+startGameBtn.addEventListener('click', () => {
+  tutorialScreen.style.opacity = '0';
+  setTimeout(() => {
+      tutorialScreen.style.display = 'none';
+  }, 400);
+
+  // Spiel laden
+  loadAnimalsFromJSON().then(() => {
+    shownIndices.clear();
+    totalScore = 0;
+    updateTotalScore();
+    currentIndex = pickRandomIndex();
+    setTimeout(() => {
+      map.invalidateSize();
+      loadRound();
+    }, 100);
+  });
+});
+
+async function loadAnimalsFromJSON(){
+  if(ANIMALS.length > 0) return; 
+  try{
+    const res = await fetch('animals/Tierinfos.json');
+    const data = await res.json();
+    ANIMALS = Object.values(data);
+    ANIMALS.forEach(a => {
+      if(a && a.name && a.distribution) RANGE_POLYGONS[a.name] = a.distribution;
+    });
+  }catch(e){ console.error('Fehler Tierinfos:', e); }
+}
+
 function updateTotalScore(){
   const box = document.getElementById('totalScoreBox');
-  if(box){
-    box.textContent = `Gesamtpunkte: ${totalScore}`;
-  }
+  if(box) box.textContent = `Punkte: ${totalScore}`;
 }
 
 // ==========================
-// SPIEL
+// SPIEL LOGIK
 // ==========================
-function resetButtonStates(){
-  document.querySelectorAll('.habitat-btn, .taxon-btn').forEach(b=>{
-    b.classList.remove('selected','btn-correct','btn-wrong');
-  });
-}
-
 function pickRandomIndex(){
   if(!ANIMALS || ANIMALS.length === 0) return -1;
-  if(shownIndices.size >= ANIMALS.length) return -1;
+  if(shownIndices.size >= ANIMALS.length) return -1; 
   const remaining = [];
   for(let i=0;i<ANIMALS.length;i++) if(!shownIndices.has(i)) remaining.push(i);
   const idx = remaining[Math.floor(Math.random()*remaining.length)];
@@ -384,84 +438,110 @@ function pickRandomIndex(){
 }
 
 function loadRound(){
-  if(currentIndex === null){
-    currentIndex = pickRandomIndex();
-  }
-  if(currentIndex === -1 || currentIndex === null){
-    alert('Alle Karten wurden gezeigt. Das Spiel ist beendet.');
+  if(currentIndex === null) currentIndex = pickRandomIndex();
+  
+  if(currentIndex === -1){
+    endGame();
     return;
   }
+  
   const a = ANIMALS[currentIndex];
   document.getElementById('animalImg').src = a.image || '';
   document.getElementById('animalName').textContent = a.name || '';
   document.getElementById('animalLatname').textContent = a.latin || '';
 
-  // Ensure sidebar scrolls to bottom so buttons are visible when image is large
   const sidebarEl = document.querySelector('.sidebar');
-  const imgEl = document.getElementById('animalImg');
-  if(sidebarEl && imgEl){
-    imgEl.onload = () => { sidebarEl.scrollTop = sidebarEl.scrollHeight; };
-    // If image already loaded from cache, scroll immediately
-    if(imgEl.complete) sidebarEl.scrollTop = sidebarEl.scrollHeight;
-  }
+  if(sidebarEl) sidebarEl.scrollTop = 0;
 
-  selectedHabitat = null;
-  selectedTaxon = null;
-  resetButtonStates();
-
-  selectedLatLng = null;
+  selectedHabitat = null; selectedTaxon = null; selectedLatLng = null;
+  document.querySelectorAll('.habitat-btn, .taxon-btn').forEach(b=>b.classList.remove('selected','btn-correct','btn-wrong'));
+  
   if(marker) map.removeLayer(marker);
   if(lastRangeLayer){ map.removeLayer(lastRangeLayer); lastRangeLayer = null; }
   if(lastDistanceLayer){ map.removeLayer(lastDistanceLayer); lastDistanceLayer = null; }
+  
   document.getElementById('infoCard').style.display = 'none';
   document.getElementById('resultBox').innerHTML = '';
-
-  // Nächste-Runde-Button verbergen, falls von vorher noch sichtbar
-  const nextBtn = document.getElementById('nextBtn');
-  if(nextBtn) nextBtn.style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('submitBtn').style.display = 'block'; 
+  
+  map.setView([20,0], 2);
 }
 
+// ==========================
+// SPIEL ENDE
+// ==========================
+function endGame(){
+  saveHighscore(playerName, totalScore);
+  
+  document.getElementById('finalNameDisplay').textContent = playerName;
+  document.getElementById('finalScoreDisplay').textContent = totalScore;
+  renderHighscores();
+  
+  const goScreen = document.getElementById('gameOverScreen');
+  goScreen.style.display = 'flex';
+  goScreen.style.opacity = '0';
+  goScreen.style.transition = 'opacity 0.5s';
+  setTimeout(()=> goScreen.style.opacity = '1', 50);
+}
+
+function saveHighscore(name, score){
+  let scores = JSON.parse(localStorage.getItem('bioguesser_scores') || '[]');
+  scores.push({ name: name, score: score });
+  scores.sort((a,b) => b.score - a.score); 
+  scores = scores.slice(0, 5); 
+  localStorage.setItem('bioguesser_scores', JSON.stringify(scores));
+}
+
+function renderHighscores(){
+  let scores = JSON.parse(localStorage.getItem('bioguesser_scores') || '[]');
+  const list = document.getElementById('highscoresList');
+  if(scores.length === 0){
+    list.innerHTML = '<div style="color:#cbd5e1; font-style:italic;">Noch keine Einträge.</div>';
+    return;
+  }
+  let html = '';
+  scores.forEach((s, i) => {
+    let icon = '🔹';
+    if(i===0) icon = '🥇';
+    if(i===1) icon = '🥈';
+    if(i===2) icon = '🥉';
+    html += `<div class="rank-item"><span>${icon} ${s.name}</span> <b>${s.score}</b></div>`;
+  });
+  list.innerHTML = html;
+}
+
+// ==========================
+// BUTTONS & INTERAKTION
+// ==========================
 function selectHabitat(h){
   selectedHabitat = h;
   document.querySelectorAll('.habitat-btn').forEach(b=>b.classList.remove('selected','btn-correct','btn-wrong'));
-  const btn = document.getElementById('hab-'+h);
-  if(btn) btn.classList.add('selected');
+  document.getElementById('hab-'+h).classList.add('selected');
 }
-
 function selectTaxon(t){
   selectedTaxon = t;
   document.querySelectorAll('.taxon-btn').forEach(b=>b.classList.remove('selected','btn-correct','btn-wrong'));
-  const btn = document.getElementById('tax-'+t);
-  if(btn) btn.classList.add('selected');
+  document.getElementById('tax-'+t).classList.add('selected');
 }
 
-// Habitat Buttons – 9 einwortige Habitate
 const habitatList = ['Savanne','Regenwald','Buschland','Wüste','Gebirge','Tundra','Polar','Wald','Wasser'];
 const habEl = document.getElementById('habitatButtons');
 habitatList.forEach(h=>{
   const b = document.createElement('button');
-  b.id = 'hab-'+h;
-  b.textContent = h;
-  b.className = 'btn habitat-btn';
-  b.style.marginRight = '5px';
+  b.id = 'hab-'+h; b.textContent = h; b.className = 'btn habitat-btn';
   b.onclick = ()=> selectHabitat(h);
   habEl.appendChild(b);
 });
-
-// Taxonomie-Buttons
 const taxonList = ['Säugetiere','Amphibien','Reptilien','Vögel','Fische','Gliederfüßer','Weichtiere'];
 const taxEl = document.getElementById('taxonButtons');
 taxonList.forEach(t=>{
   const b = document.createElement('button');
-  b.id = 'tax-'+t;
-  b.textContent = t;
-  b.className = 'btn taxon-btn';
-  b.style.marginRight = '5px';
+  b.id = 'tax-'+t; b.textContent = t; b.className = 'btn taxon-btn';
   b.onclick = ()=> selectTaxon(t);
   taxEl.appendChild(b);
 });
 
-// Kartenklick
 map.on('click', e =>{
   selectedLatLng = e.latlng;
   if(marker) map.removeLayer(marker);
@@ -469,262 +549,142 @@ map.on('click', e =>{
 });
 
 // ==========================
-// DISTANZLOGIK
+// RATEN LOGIK
 // ==========================
-function distanceToPolygon(point, polygon){
-  // Normalize and compute distance via closest point helper so we support
-  // Feature, Geometry and FeatureCollection inputs.
-  const closest = closestPointOnPolygon(point, polygon);
-  return closest.distance;
-}
-
-// Returns true if point is inside any polygon/feature. Supports FeatureCollection.
+function distanceToPolygon(point, polygon){ return closestPointOnPolygon(point, polygon).distance; }
 function pointInPolygonAny(point, polygon){
   if(!polygon) return false;
-  if(polygon.type === 'FeatureCollection'){
-    return polygon.features.some(f => turf.booleanPointInPolygon(point, f));
-  }
-  // For Feature or Geometry
+  if(polygon.type === 'FeatureCollection') return polygon.features.some(f => turf.booleanPointInPolygon(point, f));
   return turf.booleanPointInPolygon(point, polygon);
 }
-
-// Find closest point on a Polygon or MultiPolygon to `point` (both GeoJSON features)
 function closestPointOnPolygon(point, polygon){
-  // Accept Feature, Geometry or FeatureCollection
   if(!polygon) return {distance: Infinity, coord: null};
-
   if(polygon.type === 'FeatureCollection'){
     let best = {distance: Infinity, coord: null};
     polygon.features.forEach(f => {
       const c = closestPointOnPolygon(point, f);
-      if(c.distance < best.distance){ best = c; }
+      if(c.distance < best.distance) best = c;
     });
     return best;
   }
-
   let geom = polygon.type === 'Feature' ? polygon.geometry : polygon;
-  let minDist = Infinity;
-  let nearestCoord = null;
-
+  let minDist = Infinity; let nearestCoord = null;
   function checkCoords(coords){
-    // coords is an array of positions making a linear ring or linestring
     try{
       const line = turf.lineString(coords);
       const nearest = turf.nearestPointOnLine(line, point);
       const d = turf.distance(point, nearest, {units:'kilometers'});
       if(d < minDist){ minDist = d; nearestCoord = nearest.geometry.coordinates; }
-    }catch(e){ /* ignore malformed rings */ }
+    }catch(e){}
   }
-
-  if(!geom) return {distance: Infinity, coord: null};
-  if(geom.type === 'Polygon'){
-    geom.coordinates.forEach(ring => checkCoords(ring));
-  } else if(geom.type === 'MultiPolygon'){
-    geom.coordinates.forEach(p => p.forEach(ring => checkCoords(ring)));
-  }
-
+  if(geom.type === 'Polygon') geom.coordinates.forEach(ring => checkCoords(ring));
+  else if(geom.type === 'MultiPolygon') geom.coordinates.forEach(p => p.forEach(ring => checkCoords(ring)));
   return { distance: minDist, coord: nearestCoord };
 }
 
-// ==========================
-// RATEN
-// ==========================
 async function submitGuess(){
   const a = ANIMALS[currentIndex];
-  if(!selectedLatLng){ alert('Bitte auf die Karte klicken!'); return; }
-  if(!selectedHabitat){ alert('Bitte Habitat wählen!'); return; }
-  if(!selectedTaxon){ alert('Bitte taxonomische Einordnung wählen!'); return; }
+  if(!selectedLatLng){ alert('Bitte klicke auf die Karte!'); return; }
+  if(!selectedHabitat){ alert('Bitte wähle ein Habitat!'); return; }
+  if(!selectedTaxon){ alert('Bitte wähle eine Tierklasse!'); return; }
 
   const pt = turf.point([selectedLatLng.lng, selectedLatLng.lat]);
-
   const habitatPoly = HABITAT_POLYGONS[a.habitat];
   const rangePoly = RANGE_POLYGONS[a.name];
+  
   let points = 0;
-
-  // Habitat-Punkte
   if(selectedHabitat === a.habitat) points += 200;
-
-  // Taxonomie-Punkte
   if(selectedTaxon === a.taxon) points += 200;
-
-  // Entfernung zu Habitat-Polygon (falls später vorhanden)
   if(habitatPoly){
     const d = distanceToPolygon(pt, habitatPoly);
     if(d < 2000) points += Math.round((2000 - d) / 2000 * 300);
   }
-
-  // Verbreitungsgebiet: inside -> +1000, otherwise compute distance and award by bands.
-  let rangeDistanceKm = null;
-  let nearestCoord = null;
-  let insideRange = false;
-  let rangePoints = 0;
+  
+  let rangeDistanceKm = null; let nearestCoord = null; let insideRange = false; let rangePoints = 0;
   if(rangePoly){
-    try{
-      insideRange = pointInPolygonAny(pt, rangePoly);
-      if(insideRange){
-        rangePoints = 1000;
-      } else {
-        const closest = closestPointOnPolygon(pt, rangePoly);
-        rangeDistanceKm = closest.distance;
-        nearestCoord = closest.coord; // [lng, lat]
-
-        if(rangeDistanceKm !== null && isFinite(rangeDistanceKm)){
-          if(rangeDistanceKm <= 100) rangePoints = 500;
-          else if(rangeDistanceKm <= 500) rangePoints = 200;
-          else if(rangeDistanceKm <= 1000) rangePoints = 50;
-        }
-      }
-    }catch(e){
-      console.warn('Fehler beim Prüfen des Verbreitungsgebiets:', e);
+    insideRange = pointInPolygonAny(pt, rangePoly);
+    if(insideRange) rangePoints = 1000;
+    else {
+      const closest = closestPointOnPolygon(pt, rangePoly);
+      rangeDistanceKm = closest.distance; nearestCoord = closest.coord;
+      if(rangeDistanceKm !== null && rangeDistanceKm <= 100) rangePoints = 500;
+      else if(rangeDistanceKm <= 500) rangePoints = 200;
+      else if(rangeDistanceKm <= 1000) rangePoints = 50;
     }
-  } else {
-    console.log(`Kein Verbreitungsgebiet für ${a.name} gefunden.`);
   }
-
-  // Apply range points to total points for this round
   points += rangePoints;
 
-  // Buttons farblich bewerten
-  // Habitat
-  const selectedHabBtn = document.getElementById('hab-'+selectedHabitat);
-  const correctHabBtn  = document.getElementById('hab-'+a.habitat);
-  if(selectedHabBtn) selectedHabBtn.classList.remove('selected','btn-correct','btn-wrong');
-  if(correctHabBtn) correctHabBtn.classList.remove('selected','btn-correct','btn-wrong');
+  const habBtn = document.getElementById('hab-'+selectedHabitat);
+  const corrHabBtn = document.getElementById('hab-'+a.habitat);
+  if(selectedHabitat === a.habitat) habBtn.classList.add('btn-correct');
+  else { habBtn.classList.add('btn-wrong'); corrHabBtn.classList.add('btn-correct'); }
 
-  if(selectedHabitat === a.habitat){
-    if(selectedHabBtn) selectedHabBtn.classList.add('btn-correct');
-  }else{
-    if(selectedHabBtn) selectedHabBtn.classList.add('btn-wrong');
-    if(correctHabBtn) correctHabBtn.classList.add('btn-correct');
-  }
+  const taxBtn = document.getElementById('tax-'+selectedTaxon);
+  const corrTaxBtn = document.getElementById('tax-'+a.taxon);
+  if(selectedTaxon === a.taxon) taxBtn.classList.add('btn-correct');
+  else { taxBtn.classList.add('btn-wrong'); corrTaxBtn.classList.add('btn-correct'); }
 
-  // Taxon
-  const selectedTaxBtn = document.getElementById('tax-'+selectedTaxon);
-  const correctTaxBtn  = document.getElementById('tax-'+a.taxon);
-  if(selectedTaxBtn) selectedTaxBtn.classList.remove('selected','btn-correct','btn-wrong');
-  if(correctTaxBtn) correctTaxBtn.classList.remove('selected','btn-correct','btn-wrong');
-
-  if(selectedTaxon === a.taxon){
-    if(selectedTaxBtn) selectedTaxBtn.classList.add('btn-correct');
-  }else{
-    if(selectedTaxBtn) selectedTaxBtn.classList.add('btn-wrong');
-    if(correctTaxBtn) correctTaxBtn.classList.add('btn-correct');
-  }
-
-  // Verbreitungsgebiet hervorheben
-  try{
-    if(lastRangeLayer){ map.removeLayer(lastRangeLayer); lastRangeLayer = null; }
-    if(lastDistanceLayer){ map.removeLayer(lastDistanceLayer); lastDistanceLayer = null; }
-    if(rangePoly){
-      const highlightStyle = { color:'#22c55e', weight:3, fillColor:'#22c55e', fillOpacity:0.15 };
-      lastRangeLayer = L.geoJSON(rangePoly, { style: highlightStyle }).addTo(map);
-      if(lastRangeLayer.bringToFront) lastRangeLayer.bringToFront();
-
-      // If click was outside, draw a line to nearest polygon point and show distance
-      if(!insideRange && nearestCoord){
+  if(rangePoly){
+    const highlightStyle = { color:'#22c55e', weight:3, fillColor:'#22c55e', fillOpacity:0.3 };
+    lastRangeLayer = L.geoJSON(rangePoly, { style: highlightStyle }).addTo(map);
+    if(!insideRange && nearestCoord){
         const nearestLatLng = [nearestCoord[1], nearestCoord[0]];
-        const line = L.polyline([
-          [selectedLatLng.lat, selectedLatLng.lng],
-          nearestLatLng
-        ], { color: '#f59e0b', weight: 2, dashArray: '6,6' });
-
-        // small marker at nearest point
-        const nearestMarker = L.circleMarker(nearestLatLng, { radius:5, color:'#f59e0b', fillColor:'#f59e0b' });
-
+        const line = L.polyline([[selectedLatLng.lat, selectedLatLng.lng], nearestLatLng], { color: '#f59e0b', weight: 3, dashArray: '10,10' });
+        const nearestMarker = L.circleMarker(nearestLatLng, { radius:6, color:'#f59e0b', fillColor:'#f59e0b', fillOpacity:1 });
         lastDistanceLayer = L.layerGroup([line, nearestMarker]).addTo(map);
-
-        const distText = (rangeDistanceKm !== null && isFinite(rangeDistanceKm)) ? `${rangeDistanceKm.toFixed(1).replace('.',',')} km` : 'unbekannt';
-        let pointsText = '';
-        if(rangePoints){
-          pointsText = `: +${rangePoints} Punkte`;
-        } else if(rangeDistanceKm !== null && isFinite(rangeDistanceKm) && rangeDistanceKm > 1000){
-          pointsText = ': Keine Punkte';
-        }
-        if(marker){
-          marker.bindPopup(`<b>Entfernung zum Verbreitungsgebiet:</b> ${distText}${pointsText}`).openPopup();
-        }
-      } else if(insideRange){
-        if(marker) marker.bindPopup(`<b>Richtig!</b> In Verbreitungsgebiet (+${rangePoints} Punkte)`).openPopup();
-      }
-    }
-  }catch(e){ console.warn('Fehler beim Hervorheben des Verbreitungsgebiets:', e); }
-
-  // Punkte anzeigen und Gesamtpunkte erhöhen
-  let distInfo = '';
-  if(rangeDistanceKm !== null && isFinite(rangeDistanceKm) && !insideRange){
-    distInfo = `<br><b>Entfernung:</b> ${rangeDistanceKm.toFixed(1)} km`;
+        marker.bindPopup(`Entfernung: ${Math.round(rangeDistanceKm)} km (+${rangePoints} Pkt)`).openPopup();
+    } else if(insideRange) marker.bindPopup(`Volltreffer! (+${rangePoints} Pkt)`).openPopup();
   }
-  document.getElementById('resultBox').innerHTML = `<b>Punkte dieser Runde:</b> ${points}${distInfo}`;
+
+  let distInfo = (rangeDistanceKm !== null && !insideRange) ? `<br>Entfernung: ${Math.round(rangeDistanceKm)} km` : '';
+  document.getElementById('resultBox').innerHTML = `<b>Ergebnis:</b> ${points} Punkte${distInfo}`;
+  
   totalScore += points;
   updateTotalScore();
 
-  // Infokarte laden (falls infoFile im JSON vorhanden ist)
-  if(a.infoFile){
-    loadInfo(a.infoFile);
-  }
-
-  // Nächste-Runde-Button einblenden
+  if(a.infoFile) loadInfo(a.infoFile);
+  
   const nextBtn = document.getElementById('nextBtn');
-  if(nextBtn) nextBtn.style.display = 'inline-block';
+  nextBtn.style.display = 'inline-block';
+  document.getElementById('submitBtn').style.display = 'none';
+  
+  if(shownIndices.size >= ANIMALS.length) {
+    nextBtn.textContent = "ZUM ERGEBNIS 🏁";
+  } else {
+    nextBtn.textContent = "Nächste Runde ➔";
+  }
 }
 
 document.getElementById('submitBtn').onclick = submitGuess;
-
-// ==========================
-// NÄCHSTE RUNDE
-// ==========================
 document.getElementById('nextBtn').onclick = () => {
-  const idx = pickRandomIndex();
-  if(idx === -1){
-    alert('Alle Karten wurden gezeigt. Das Spiel ist beendet.');
-    document.getElementById('nextBtn').style.display = 'none';
-    return;
+  if(shownIndices.size >= ANIMALS.length){
+    endGame();
+  } else {
+    currentIndex = pickRandomIndex();
+    loadRound();
   }
-  currentIndex = idx;
-  loadRound();
 };
 
-// ==========================
-// INFO LADEN
-// ==========================
 async function loadInfo(file){
   try{
     const res = await fetch(file);
     const data = await res.json();
     const box = document.getElementById('infoCard');
-
-    box.innerHTML = `
-      <h3>${data.title}</h3>
-      <p>${data.text}</p>
-    `;
+    box.innerHTML = `<h3>${data.title}</h3><p>${data.text}</p>`;
     box.style.display = 'block';
-  }catch(e){ console.error('Info konnte nicht geladen werden:',e); }
+  }catch(e){}
 }
 
-// Start
-loadAnimalsFromJSON().then(() => {
-  // prepare first index but only show after game start; still pick one so UI has data if needed
-  currentIndex = pickRandomIndex();
-  loadRound();
-  updateTotalScore();
-});
-
-// Sidebar toggle behavior
 const appEl = document.querySelector('.app');
 const toggleBtn = document.getElementById('sidebarToggle');
-function updateToggleIcon(){
-  if(appEl.classList.contains('collapsed')) toggleBtn.textContent = '▶';
-  else toggleBtn.textContent = '◀';
-}
 if(toggleBtn && appEl){
   toggleBtn.addEventListener('click', ()=>{
     appEl.classList.toggle('collapsed');
-    updateToggleIcon();
-    // Ensure map is resized after layout change
-    setTimeout(()=> map.invalidateSize(), 220);
+    toggleBtn.textContent = appEl.classList.contains('collapsed') ? '▶' : '◀';
+    if(window.innerWidth > 850) toggleBtn.style.left = appEl.classList.contains('collapsed') ? '0px' : 'var(--sidebar-width)';
+    setTimeout(()=> map.invalidateSize(), 300);
   });
 }
-updateToggleIcon();
 </script>
 </body>
 </html>
