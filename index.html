@@ -248,6 +248,37 @@
       .logo-badge { width: 160px; height: 160px; top: -80px; }
       .start-title { font-size: 2.8rem; }
     }
+
+    /* Biology Popup */
+    .biology-inner {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.1);
+      text-align: center;
+      position: relative;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      animation: fadeIn 0.4s ease-out;
+      margin: auto;
+      color: #e8eef5;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .biology-inner p { margin: 0 0 20px 0; }
+    .biology-inner button {
+      background: linear-gradient(to right, #38bdf8, #0ea5e9);
+      color: #0f172a;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .biology-inner button:hover { transform: scale(1.05); }
   </style>
 </head>
 <body>
@@ -285,7 +316,7 @@
         <ul>
           <li><b>Wo</b> lebt es? (Klick die Karte!)</li>
           <li>In welchem <b>Habitat</b> ist es zu Hause?</li>
-          <li>Zu welcher <b>Tierklasse</b> gehört es?</li>
+          <li>Zu welcher <b>Tiergruppe</b> gehört es?</li>
         </ul>
       </div>
 
@@ -295,7 +326,7 @@
         <ul>
           <li><b>Karte (Volltreffer):</b> +1000 Pkt.</li>
           <li><b>Karte (Nahe dran):</b> 50 - 500 Pkt.</li>
-          <li><b>Habitat & Klasse:</b> je +200 Pkt.</li>
+          <li><b>Habitat & Gruppe:</b> je +200 Pkt.</li>
         </ul>
       </div>
     </div>
@@ -327,6 +358,13 @@
   </div>
 </div>
 
+<div id="biologyPopup" class="overlay-screen" style="display:none;">
+  <div class="biology-inner">
+    <p>Du scheinst ein fortgeschrittener Biologe zu sein, der weiß, dass sich eine Art niemals aus ihrer Klade heraus entwickelt. Somit hast du recht, dass man quasi alle Wirbeltiere auch zu den Fischen zählen könnte! Im Bioguesser benutzen wir jedoch die gängigere Definition von "Fischen".</p>
+    <button id="closeBiologyPopup">OK</button>
+  </div>
+</div>
+
 <div class="app">
   <div class="sidebar">
     <div class="img-wrap"><img id="animalImg" src="" alt="Tier"></div>
@@ -335,7 +373,7 @@
 
     <div class="selection-area">
       <div><label>Habitat:</label><div id="habitatButtons"></div></div>
-      <div style="margin-top:15px;"><label>Klasse:</label><div id="taxonButtons"></div></div>
+      <div style="margin-top:15px;"><label>Gruppe:</label><div id="taxonButtons"></div></div>
       <div style="margin-top:20px;"><button id="submitBtn" class="btn primary">RATEN</button></div>
       <div id="resultBox"></div>
       <div id="infoCard" style="display:none"></div>
@@ -377,6 +415,7 @@ let selectedLatLng = null;
 let marker = null;
 let lastRangeLayer = null;
 let lastDistanceLayer = null;
+let biologyPopupShown = false;
 
 // ==========================
 // NAVIGATION (START -> TUTORIAL -> GAME)
@@ -423,6 +462,7 @@ startGameBtn.addEventListener('click', () => {
   // Spiel laden
   loadAnimalsFromJSON().then(() => {
     shownIndices.clear();
+    biologyPopupShown = false;
     totalScore = 0;
     updateTotalScore();
     currentIndex = pickRandomIndex();
@@ -612,7 +652,7 @@ async function submitGuess(){
   const a = ANIMALS[currentIndex];
   if(!selectedLatLng){ alert('Bitte klicke auf die Karte!'); return; }
   if(!selectedHabitat){ alert('Bitte wähle ein Habitat!'); return; }
-  if(!selectedTaxon){ alert('Bitte wähle eine Tierklasse!'); return; }
+  if(!selectedTaxon){ alert('Bitte wähle eine Tiergruppe!'); return; }
 
   const pt = turf.point([selectedLatLng.lng, selectedLatLng.lat]);
   const habitatPoly = HABITAT_POLYGONS[a.habitat];
@@ -649,6 +689,11 @@ async function submitGuess(){
   const corrTaxBtn = document.getElementById('tax-'+a.taxon);
   if(selectedTaxon === a.taxon) taxBtn.classList.add('btn-correct');
   else { taxBtn.classList.add('btn-wrong'); corrTaxBtn.classList.add('btn-correct'); }
+
+  if(selectedTaxon === 'Fische' && ['Säugetiere', 'Amphibien', 'Reptilien', 'Vögel'].includes(a.taxon) && !biologyPopupShown) {
+    document.getElementById('biologyPopup').style.display = 'flex';
+    biologyPopupShown = true;
+  }
 
   if(rangePoly){
     const highlightStyle = { color:'#22c55e', weight:3, fillColor:'#22c55e', fillOpacity:0.3 };
@@ -703,6 +748,12 @@ async function loadInfo(file){
 
 const appEl = document.querySelector('.app');
 const toggleBtn = document.getElementById('sidebarToggle');
+
+// Biology Popup Close
+document.getElementById('closeBiologyPopup').addEventListener('click', () => {
+  document.getElementById('biologyPopup').style.display = 'none';
+});
+
 if(toggleBtn && appEl){
   toggleBtn.addEventListener('click', ()=>{
     appEl.classList.toggle('collapsed');
