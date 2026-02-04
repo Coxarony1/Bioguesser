@@ -383,7 +383,7 @@
   <button id="sidebarToggle" title="Menü">◀</button>
 
   <div class="mapwrap">
-    <button id="nextBtn">Nächste Runde ➔</button>
+    <button id="nextBtn">Nächstes Tier ➔</button>
     <div id="map"></div>
     <div id="totalScoreBox">Punkte: 0</div>
   </div>
@@ -722,7 +722,7 @@ async function submitGuess(){
   if(shownIndices.size >= ANIMALS.length) {
     nextBtn.textContent = "ZUM ERGEBNIS 🏁";
   } else {
-    nextBtn.textContent = "Nächste Runde ➔";
+    nextBtn.textContent = "Nächstes Tier ➔";
   }
 }
 
