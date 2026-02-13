@@ -185,6 +185,19 @@
       display: block;
     }
 
+    #animalCounter {
+      display: inline-block;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
     #animalName { margin: 0; font-size: 1.5rem; line-height: 1.2; color: #fff; }
     #animalLatname { display: block; margin-bottom: 15px; color: #94a3b8; font-style: italic; font-size: 0.95rem; }
 
@@ -333,7 +346,7 @@
 
     <p style="margin-bottom: 25px; color:#94a3b8;">
       Hallo <span id="tutorialPlayerName" style="color:#22c55e; font-weight:bold;">Spieler</span>! 
-      Es werden nacheinander alle Tiere abgefragt. <br>Am Ende siehst du deine Gesamtpunktzahl.
+      Es werden nacheinander 10 Tiere abgefragt. <br>Am Ende siehst du deine Gesamtpunktzahl.
     </p>
 
     <button id="startGameBtn" class="action-btn">LOS GEHT'S 🚀</button>
@@ -354,7 +367,7 @@
       <div id="highscoresList"></div>
     </div>
 
-    <button onclick="location.reload()" class="action-btn" style="font-size:1rem; padding: 15px 30px;">NEUSTART</button>
+    <button id="newGameBtn" class="action-btn" style="font-size:1rem; padding: 15px 30px;">NEUES SPIEL</button>
   </div>
 </div>
 
@@ -368,6 +381,7 @@
 <div class="app">
   <div class="sidebar">
     <div class="img-wrap"><img id="animalImg" src="" alt="Tier"></div>
+    <div id="animalCounter">1/10</div>
     <h2 id="animalName"></h2>
     <p><i id="animalLatname"></i></p>
 
@@ -416,6 +430,7 @@ let marker = null;
 let lastRangeLayer = null;
 let lastDistanceLayer = null;
 let biologyPopupShown = false;
+const MAX_ANIMALS_PER_GAME = 10;
 
 // ==========================
 // NAVIGATION (START -> TUTORIAL -> GAME)
@@ -495,7 +510,7 @@ function updateTotalScore(){
 // ==========================
 function pickRandomIndex(){
   if(!ANIMALS || ANIMALS.length === 0) return -1;
-  if(shownIndices.size >= ANIMALS.length) return -1; 
+  if(shownIndices.size >= MAX_ANIMALS_PER_GAME) return -1; 
   const remaining = [];
   for(let i=0;i<ANIMALS.length;i++) if(!shownIndices.has(i)) remaining.push(i);
   const idx = remaining[Math.floor(Math.random()*remaining.length)];
@@ -513,6 +528,7 @@ function loadRound(){
   
   const a = ANIMALS[currentIndex];
   document.getElementById('animalImg').src = a.image || '';
+  document.getElementById('animalCounter').textContent = `${shownIndices.size}/${MAX_ANIMALS_PER_GAME}`;
   document.getElementById('animalName').textContent = a.name || '';
   document.getElementById('animalLatname').textContent = a.latin || '';
 
@@ -719,7 +735,7 @@ async function submitGuess(){
   nextBtn.style.display = 'inline-block';
   document.getElementById('submitBtn').style.display = 'none';
   
-  if(shownIndices.size >= ANIMALS.length) {
+  if(shownIndices.size >= MAX_ANIMALS_PER_GAME) {
     nextBtn.textContent = "ZUM ERGEBNIS 🏁";
   } else {
     nextBtn.textContent = "Nächstes Tier ➔";
@@ -728,13 +744,41 @@ async function submitGuess(){
 
 document.getElementById('submitBtn').onclick = submitGuess;
 document.getElementById('nextBtn').onclick = () => {
-  if(shownIndices.size >= ANIMALS.length){
+  if(shownIndices.size >= MAX_ANIMALS_PER_GAME){
     endGame();
   } else {
     currentIndex = pickRandomIndex();
     loadRound();
   }
 };
+
+document.getElementById('newGameBtn').addEventListener('click', () => {
+  const goScreen = document.getElementById('gameOverScreen');
+  goScreen.style.opacity = '0';
+  goScreen.style.transition = 'opacity 0.4s';
+  setTimeout(() => {
+    goScreen.style.display = 'none';
+    startScreen.style.display = 'flex';
+    startScreen.style.opacity = '1';
+    startScreen.style.transition = 'opacity 0.4s';
+    // Reset game state
+    nameInput.value = '';
+    toTutorialBtn.disabled = true;
+    playerName = 'Spieler';
+    totalScore = 0;
+    shownIndices.clear();
+    biologyPopupShown = false;
+    currentIndex = null;
+    selectedHabitat = null;
+    selectedTaxon = null;
+    selectedLatLng = null;
+    if(marker) map.removeLayer(marker);
+    if(lastRangeLayer) map.removeLayer(lastRangeLayer);
+    if(lastDistanceLayer) map.removeLayer(lastDistanceLayer);
+    if(appEl.classList.contains('collapsed')) appEl.classList.remove('collapsed');
+    updateTotalScore();
+  }, 400);
+});
 
 async function loadInfo(file){
   try{
